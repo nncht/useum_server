@@ -1,4 +1,7 @@
-# [![My Skills](https://skills.thijs.gg/icons?i=nodejs&theme=light)](https://skills.thijs.gg) SERVER -  /association/ - network your collections
+
+# SERVER -  /association/ - network your collections
+
+# ![My Skills](https://skills.thijs.gg/icons?i=nodejs,mongodb&theme=light)
 
 Repo for the CLIENT of the Ironhack M3 Project brought to you by The Three Amigos
 
