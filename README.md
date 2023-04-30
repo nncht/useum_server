@@ -1,7 +1,7 @@
 
 # SERVER -  /association/ - network your collections
 
-Repo for the CLIENT of the Ironhack M3 Project brought to you by The Three Amigos
+Repo for the SERVER of the Ironhack M3 Project brought to you by The Three Amigos
 
 ![My Skills](https://skills.thijs.gg/icons?i=nodejs,mongodb&theme=light)
 
@@ -27,7 +27,7 @@ For sure the MERN stack.
 
 ## Project Structure SERVER
 
-Here we will make sense of the convoluted network of parts that make up our project.
+Here we will make sense of the convoluted network of parts that make up the SERVER side of our project.
 
 <h2 align="center"> Contributors </h2>
 
