@@ -1,6 +1,9 @@
 const { Schema, model } = require("mongoose");
 
 const categoryEnum = require('../services/categoryEnum');
+const Collection = require('./Collection.model');
+const Review = require('./Review.model');
+const User = require('./User.model');
 
 const itemSchema = new Schema(
   {
@@ -20,6 +23,23 @@ const itemSchema = new Schema(
       type: String,
       enum: Object.values(categoryEnum),
     required: true,
+    },
+    collections: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Collection'
+    }],
+    users: [{
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }],
+    likes: [{
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }],
+    reviews: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Review'
+    }],
 
 
 
