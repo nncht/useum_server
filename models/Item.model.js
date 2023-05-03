@@ -1,9 +1,9 @@
 const { Schema, model } = require("mongoose");
 
-const categoryEnum = require('../services/categoryEnum');
 const Collection = require('./Collection.model');
 const Review = require('./Review.model');
 const User = require('./User.model');
+const Category = require('./Category.model');
 
 const itemSchema = new Schema(
   {
@@ -19,11 +19,10 @@ const itemSchema = new Schema(
       type: String,
       default:"No image"
     },
-    category: {
-      type: String,
-      enum: Object.values(categoryEnum),
-    required: true,
-    },
+    categories: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Category'
+    }],
     collections: [{
       type: Schema.Types.ObjectId,
       ref: 'Collection'
