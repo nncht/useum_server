@@ -4,7 +4,7 @@ const router = express.Router();
 const Item = require('../models/Item.model');
 
 
-router.post('/items', isAuthenticated, async (req, res, next) => {
+router.post('/items', async (req, res, next) => {
 	try {
 		// Retrieve the item data from the request body
 		const { name, description } = req.body;
@@ -30,7 +30,7 @@ router.post('/items', isAuthenticated, async (req, res, next) => {
 	}
 });
 
-router.get('/items', isAuthenticated, async (req, res, next) => {
+router.get('/items', async (req, res, next) => {
 	try {
 		// Retrieve all the items from the database
 		const items = await Item.find({});
