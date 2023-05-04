@@ -8,7 +8,7 @@ const { isAuthenticated } = require('../middleware/jwt.middleware');
 const router = express.Router();
 const saltRounds = 10;
 
-router.post('/register', async (req, res, next) => {
+router.post('/signup', async (req, res, next) => {
 	const { email, password, username } = req.body;
 
 	try {
