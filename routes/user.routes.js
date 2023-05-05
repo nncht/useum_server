@@ -34,6 +34,25 @@ router.get('/users', async (req, res, next) => {
 	}
 });
 
+router.get('/users/:id', async (req, res, next) => {
+	try {
+		const { id } = req.params;
+
+		if (!mongoose.Types.ObjectId.isValid(id)) {
+			res.status(400).json({ message: 'Specified id is not valid' });
+			return;
+		}
+
+		const user = await User.findById(id);
+
+		res.status(200).json(user);
+	} catch (error) {
+		res.status(500).json({ message: 'Internal Server Error' });
+		next(error);
+	}
+});
+
+
 router.put('/users/:_id', async (req, res, next) => {
 	try {
 		const { _id } = req.params;
