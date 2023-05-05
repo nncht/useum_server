@@ -17,7 +17,7 @@ const collectionSchema = new Schema(
     description: {
       type: String
     },
-    image: {
+    imageUrl: {
       type: String,
       default:"No image"
     },
