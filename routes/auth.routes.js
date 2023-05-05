@@ -9,7 +9,7 @@ const router = express.Router();
 const saltRounds = 10;
 
 router.post('/signup', async (req, res, next) => {
-	const { email, password, username } = req.body;
+	const { email, password, username, imageUrl } = req.body;
 
 	try {
 		if (email === '' || password === '' || username === '') {
@@ -42,11 +42,13 @@ router.post('/signup', async (req, res, next) => {
 		const salt = bcrypt.genSaltSync(saltRounds);
 		const hashedPassword = bcrypt.hashSync(password, salt);
 
-		const createdUser = await User.create({ email, password: hashedPassword, username });
+		const createdUser = await User.create({ email, password: hashedPassword, username, imageUrl });
 
-		const { email: createdEmail, username: createdName, _id: createdId } = createdUser;
+		console.log(createdUser)
 
-		const user = { email: createdEmail, username: createdName, _id: createdId };
+		const { email: createdEmail, username: createdName, _id: createdId, imageUrl: createdImageUrl } = createdUser;
+
+		const user = { email: createdEmail, username: createdName, _id: createdId, imageUrl: createdImageUrl };
 
 		res.status(201).json({ user });
 	} catch (error) {

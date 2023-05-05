@@ -22,9 +22,12 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'Username is required.'],
       unique: true,
-      lowercase: true,
       trim: true
     },
+    imageUrl: {
+      type: String
+    },
+
     collections: [{
       type: Schema.Types.ObjectId,
       ref: 'Collection'
