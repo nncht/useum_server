@@ -21,6 +21,8 @@ const authRoutes = require("./routes/auth.routes");
 app.use("/", authRoutes);
 const createItemRoutes = require("./routes/createItem.routes");
 app.use("/", createItemRoutes);
+const uploadRoutes = require("./routes/upload.routes");
+app.use("/", uploadRoutes);
 
 
 
