@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const fileUploader = require("../config/cloudinary.config");
 const User = require('../models/User.model');
+const Collection = require('../models/Collection.model');
 const { isAuthenticated } = require('../middleware/jwt.middleware');
 
 
@@ -43,7 +44,11 @@ router.get('/users/:id', async (req, res, next) => {
 			return;
 		}
 
-		const user = await User.findById(id);
+
+
+
+		const user = await User.findById(id).populate('collections');
+		console.log(user)
 
 		res.status(200).json(user);
 	} catch (error) {
