@@ -19,10 +19,10 @@ const indexRoutes = require("./routes/index.routes");
 app.use("/", indexRoutes);
 const authRoutes = require("./routes/auth.routes");
 app.use("/", authRoutes);
-const createItemRoutes = require("./routes/createItem.routes");
-app.use("/", createItemRoutes);
-const createCollectionRoutes = require("./routes/createCollection.routes");
-app.use("/", createCollectionRoutes);
+const itemRoutes = require("./routes/item.routes");
+app.use("/", itemRoutes);
+const collectionRoutes = require("./routes/collection.routes");
+app.use("/", collectionRoutes);
 
 
 
