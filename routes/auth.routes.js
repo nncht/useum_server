@@ -52,9 +52,20 @@ router.post('/signup', async (req, res, next) => {
 
 		res.status(201).json({ user });
 	} catch (error) {
+
+		if (error instanceof mongoose.Error.ValidationError) {
+			res.status(500).json({ message: error.message });
+		} else if (error.code === 11000) {
+			res.status(500).json({
+				message:
+					'Username and email need to be unique. Either username or email is already used.',
+			});
+		} else {
+
 		console.log(error);
 		res.status(500).json({ message: 'Internal Server Error' });
 		next(error);
+	}
 	}
 });
 
