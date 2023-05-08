@@ -6,13 +6,13 @@ const User = require('../models/User.model');
 
 router.post('/collections', async (req, res, next) => {
 	try {
-		const { name, createdBy, description } = req.body;
+		const { name, createdBy, description, imageUrl } = req.body;
 		if (!name) {
 			res.status(400).json({ message: 'Please provide a name for the collection' });
 			return;
 		}
 
-		const collection = await Collection.create({ name, createdBy, description });
+		const collection = await Collection.create({ name, createdBy, description, imageUrl });
 
 		// Update the user's collections array
 		await User.findByIdAndUpdate(createdBy, { $push: { collections: collection._id } });
