@@ -53,4 +53,42 @@ router.get('/collections/:id', async (req, res, next) => {
 	}
 });
 
+router.put('/collections/:id/edit', async (req, res, next) => {
+	const { id } = req.params;
+	const { name, description, imageUrl } = req.body;
+
+	try {
+		const collection = await Collection.findByIdAndUpdate(
+			id,
+			{ name, description, imageUrl },
+			{ new: true }
+		);
+
+		res.status(200).json(collection);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: 'Internal Server Error' });
+		next(error);
+	}
+});
+
+
+router.delete('/collections/:id', async (req, res, next) => {
+	const { id } = req.params;
+
+	try {
+		await Collection.findByIdAndDelete(id);
+		// Update the user's collections array
+		await User.findByIdAndUpdate(createdBy, { $pull: { collections: id } });
+
+		res.status(200).json({ message: 'Collection deleted successfully' });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: 'Internal Server Error' });
+		next(error);
+	}
+
+});
+
+
 module.exports = router;
