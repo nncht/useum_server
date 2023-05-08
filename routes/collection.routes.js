@@ -55,14 +55,10 @@ router.get('/collections/:id', async (req, res, next) => {
 
 router.put('/collections/:id/edit', async (req, res, next) => {
 	const { id } = req.params;
-	const { name, description, imageUrl } = req.body;
+	const { name, description, imageUrl, createdBy } = req.body;
 
 	try {
-		const collection = await Collection.findByIdAndUpdate(
-			id,
-			{ name, description, imageUrl },
-			{ new: true }
-		);
+		const collection = await Collection.findByIdAndUpdate(id, { name, description, imageUrl }, { new: true });
 
 		res.status(200).json(collection);
 	} catch (error) {
@@ -72,14 +68,16 @@ router.put('/collections/:id/edit', async (req, res, next) => {
 	}
 });
 
-
-router.delete('/collections/:id', async (req, res, next) => {
+router.post('/collections/:id', async (req, res, next) => {
 	const { id } = req.params;
+	const { createdBy } = req.body;
 
 	try {
+		// Delete the collection from the database
+		await User.findByIdAndUpdate(createdBy, { $pull: { collections: id } });
+
 		await Collection.findByIdAndDelete(id);
 		// Update the user's collections array
-		await User.findByIdAndUpdate(createdBy, { $pull: { collections: id } });
 
 		res.status(200).json({ message: 'Collection deleted successfully' });
 	} catch (error) {
@@ -87,8 +85,6 @@ router.delete('/collections/:id', async (req, res, next) => {
 		res.status(500).json({ message: 'Internal Server Error' });
 		next(error);
 	}
-
 });
-
 
 module.exports = router;
