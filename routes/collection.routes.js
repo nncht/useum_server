@@ -3,16 +3,19 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Collection = require('../models/Collection.model');
 const User = require('../models/User.model');
+const Category = require('../models/Category.model');
 
 router.post('/collections', async (req, res, next) => {
 	try {
-		const { name, createdBy, description, imageUrl } = req.body;
+		const { name, createdBy, description, imageUrl, categories } = req.body;
 		if (!name) {
 			res.status(400).json({ message: 'Please provide a name for the collection' });
 			return;
 		}
 
-		const collection = await Collection.create({ name, createdBy, description, imageUrl });
+		const categoryArray = await Category.find({ category: { $in: categories } });
+
+		const collection = await Collection.create({ name, createdBy, description, imageUrl, categories: categoryArray });
 
 		// Update the user's collections array
 		await User.findByIdAndUpdate(createdBy, { $push: { collections: collection._id } });
