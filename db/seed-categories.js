@@ -6,6 +6,15 @@ const categories = [
   { category: 'Books' },
   { category: 'Movies' },
   { category: 'Music' },
+  { category: 'Music Production' },
+  { category: 'Digital Illustration' },
+  { category: 'Gaming' },
+  { category: 'Photography' },
+  { category: 'Gym' },
+  { category: 'Football' },
+  { category: 'Basketball' },
+  { category: 'Programming' },
+  { category: 'RGB Light' },
   // add more categories here
 ];
 
