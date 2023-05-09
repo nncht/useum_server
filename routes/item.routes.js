@@ -3,12 +3,13 @@ const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item.model');
 const Category = require('../models/Category.model');
+const Collection = require('../models/Collection.model');
 
 
 router.post('/items', async (req, res, next) => {
 	try {
 		// Retrieve the item data from the request body
-		const { name, description, imageUrl, createdBy, categories } = req.body;
+		const { name, description, imageUrl, createdBy, categories, collections } = req.body;
 
 		const categoryArray = await Category.find({ category: { $in: categories } });
 
@@ -24,8 +25,17 @@ router.post('/items', async (req, res, next) => {
 			description,
 			imageUrl,
 			createdBy,
-			categories: categoryArray
+			categories: categoryArray,
+			collections,
 		});
+
+		// Update the collections with the new item
+		await Collection.updateMany(
+			{ _id: { $in: collections } },
+			{ $push: { items: newItem._id } },
+			{ new: true }
+		);
+
 
 		// Send back a success response with the newly created item
 		res.status(201).json({ item: newItem });
