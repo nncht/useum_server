@@ -29,6 +29,9 @@ app.use("/", collectionRoutes);
 const uploadRoutes = require("./routes/upload.routes");
 app.use("/", uploadRoutes);
 
+const categoryRoutes = require("./routes/categories.routes");
+app.use("/", categoryRoutes);
+
 
 
 
