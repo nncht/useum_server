@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User.model');
 const { isAuthenticated } = require('../middleware/jwt.middleware');
 
-
 const router = express.Router();
 const saltRounds = 10;
 
@@ -42,30 +41,29 @@ router.post('/signup', async (req, res, next) => {
 		const salt = bcrypt.genSaltSync(saltRounds);
 		const hashedPassword = bcrypt.hashSync(password, salt);
 
-		const createdUser = await User.create({ email, password: hashedPassword, username, imageUrl });
-
-		console.log(createdUser)
-
-		const { email: createdEmail, username: createdName, _id: createdId, imageUrl: createdImageUrl } = createdUser;
-
-		const user = { email: createdEmail, username: createdName, _id: createdId, imageUrl: createdImageUrl };
-
-		res.status(201).json({ user });
+		if (imageUrl !== '') {
+			const createdUser = await User.create({ email, password: hashedPassword, username, imageUrl });
+			const { email: createdEmail, username: createdName, _id: createdId, imageUrl: createdImageUrl } = createdUser;
+			const user = { email: createdEmail, username: createdName, _id: createdId, imageUrl: createdImageUrl };
+			res.status(201).json({ user });
+		} else {
+			const createdUser = await User.create({ email, password: hashedPassword, username });
+			const { email: createdEmail, username: createdName, _id: createdId } = createdUser;
+			const user = { email: createdEmail, username: createdName, _id: createdId };
+			res.status(201).json({ user });
+		}
 	} catch (error) {
-
 		if (error instanceof mongoose.Error.ValidationError) {
 			res.status(500).json({ message: error.message });
 		} else if (error.code === 11000) {
 			res.status(500).json({
-				message:
-					'Username and email need to be unique. Either username or email is already used.',
+				message: 'Username and email need to be unique. Either username or email is already used.',
 			});
 		} else {
-
-		console.log(error);
-		res.status(500).json({ message: 'Internal Server Error' });
-		next(error);
-	}
+			console.log(error);
+			res.status(500).json({ message: 'Internal Server Error' });
+			next(error);
+		}
 	}
 });
 
@@ -104,9 +102,9 @@ router.post('/login', async (req, res, next) => {
 });
 
 router.get('/verify', isAuthenticated, (req, res, next) => {
-    console.log(`req.payload`, req.payload);
+	console.log(`req.payload`, req.payload);
 
-    res.status(200).json(req.payload);
+	res.status(200).json(req.payload);
 });
 
 module.exports = router;
