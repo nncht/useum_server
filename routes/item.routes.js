@@ -2,12 +2,15 @@ const { isAuthenticated } = require('../middleware/jwt.middleware');
 const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item.model');
+const Category = require('../models/Category.model');
 
 
 router.post('/items', async (req, res, next) => {
 	try {
 		// Retrieve the item data from the request body
-		const { name, description } = req.body;
+		const { name, description, imageUrl, createdBy, categories } = req.body;
+
+		const categoryArray = await Category.find({ category: { $in: categories } });
 
 		// Do some validation on the input data
 		if (!name) {
@@ -19,6 +22,9 @@ router.post('/items', async (req, res, next) => {
 		const newItem = await Item.create({
 			name,
 			description,
+			imageUrl,
+			createdBy,
+			categories: categoryArray
 		});
 
 		// Send back a success response with the newly created item
