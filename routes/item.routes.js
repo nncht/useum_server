@@ -21,14 +21,16 @@ router.post('/items', async (req, res, next) => {
 		}
 
 		// Create the new item
-		const newItem = await Item.create({
+		let newItem = await Item.create({
 			name,
 			description,
 			imageUrl,
 			createdBy,
 			categories: categoryArray,
 			collections,
-		}).populate('categories').populate('collections').populate('createdBy');
+		})
+
+
 
 		// Update the collections with the new item
 		await Collection.updateMany(
