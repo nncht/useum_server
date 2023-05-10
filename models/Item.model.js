@@ -39,6 +39,10 @@ const itemSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Review'
     }],
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }
 
 
 

@@ -46,7 +46,7 @@ router.get('/collections/:id', async (req, res, next) => {
 	const { id } = req.params;
 
 	try {
-		const collection = await Collection.findById(id);
+		const collection = await Collection.findById(id).populate('categories').populate('items');
 
 		res.status(200).json(collection);
 	} catch (error) {
