@@ -4,6 +4,7 @@ const router = express.Router();
 const Item = require('../models/Item.model');
 const Category = require('../models/Category.model');
 const Collection = require('../models/Collection.model');
+const User = require('../models/User.model');
 
 
 router.post('/items', async (req, res, next) => {
@@ -27,12 +28,12 @@ router.post('/items', async (req, res, next) => {
 			createdBy,
 			categories: categoryArray,
 			collections,
-		});
+		}).populate('categories').populate('collections').populate('createdBy');
 
 		// Update the collections with the new item
 		await Collection.updateMany(
 			{ _id: { $in: collections } },
-			{ $push: { items: newItem._id } },
+			{ $push: { items: newItem } },
 			{ new: true }
 		);
 
@@ -49,7 +50,7 @@ router.post('/items', async (req, res, next) => {
 router.get('/items', async (req, res, next) => {
 	try {
 		// Retrieve all the items from the database
-		const items = await Item.find({});
+		const items = await Item.find({}).populate('categories').populate('collections').populate('createdBy');
 
 		// Send back a success response with the items
 		res.status(200).json({ items });
@@ -59,5 +60,26 @@ router.get('/items', async (req, res, next) => {
 		next(error);
 	}
 });
+
+//get one item
+
+router.get('/items/:id', async (req, res, next) => {
+	try {
+		// Retrieve the item id from the request params
+		const { id } = req.params;
+
+		// Retrieve the item details from the database
+
+		const item = await Item.findById(id).populate('categories').populate('collections').populate('createdBy');
+
+		// Send back a success response with the item
+		res.status(200).json({ item });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: 'Internal Server Error' });
+		next(error);
+	}
+});
+
 
 module.exports = router;
