@@ -101,18 +101,25 @@ router.put('/items/:id/edit', async (req, res, next) => {
 		res.status(500).json({ message: 'Internal Server Error' });
 		next(error);
 	}
-
+});
 
 	router.post('/items/:id', async (req, res, next) => {
 		const { id } = req.params;
-		const { createdBy } = req.body;
+		const { collection } = req.body;
+
 
 		try {
-			// Delete the collection from the database
-			await User.findByIdAndUpdate(createdBy, { $pull: { items: id } });
+			// Delete the item id from the collection
+			const updatedCollection = await Collection.findByIdAndUpdate(collection, { $pull: { items: id } }, { new: true }).populate('items');
 
-			await Item.findByIdAndDelete(id);
+			//update the item
+
+			const updatedItem = await Item.findByIdAndUpdate(id, { $pull: { collections: collection } }, { new: true }).populate('collections');
+
+			// await Item.findByIdAndDelete(id);
 			// Update the user's collections array
+
+			console.log("Updated Collection", updatedCollection, "Updated Item", updatedItem);
 
 			res.status(200).json({ message: 'Item deleted successfully' });
 		} catch (error) {
@@ -122,7 +129,7 @@ router.put('/items/:id/edit', async (req, res, next) => {
 		}
 	});
 
-});
+
 
 
 
