@@ -21,6 +21,19 @@ router.post('/items', async (req, res, next) => {
 			return;
 		}
 
+
+    if (collections === "") {
+
+      const newFreeItem = await Item.create({
+				name,
+				description,
+				imageUrl,
+				createdBy,
+				categories: categoryArray,
+			})
+      res.status(201).json({ item: newFreeItem });
+    }
+
 		if (imageUrl !== '') {
 			// Create the new item
 			const newItem = await Item.create({
