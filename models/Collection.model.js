@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 
 const User = require('./User.model');
 const Item = require('./Item.model');
-const Review = require('./Review.model');
+const Review = require('./Comment.model');
 const Category = require('./Category.model');
 
 
@@ -34,14 +34,6 @@ const collectionSchema = new Schema(
       ref: 'Review'
     }],
     likes: [{
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }],
-    sharedBy: [{
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }],
-    followers: [{
       type: Schema.Types.ObjectId,
       ref: 'User'
     }],

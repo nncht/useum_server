@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 
 const Collection = require('./Collection.model');
-const Review = require('./Review.model');
+const Comments = require('./Comment.model');
 const User = require('./User.model');
 const Category = require('./Category.model');
 
@@ -35,14 +35,10 @@ const itemSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User'
     }],
-    reviews: [{
+    comments: [{
       type: Schema.Types.ObjectId,
       ref: 'Review'
     }],
-
-
-
-
   },
   {
     timestamps: true
