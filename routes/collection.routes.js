@@ -15,12 +15,23 @@ router.post('/collections', async (req, res, next) => {
 
 		const categoryArray = await Category.find({ category: { $in: categories } });
 
-		const collection = await Collection.create({ name, createdBy, description, imageUrl, categories: categoryArray });
+		// If no collection image is chosen, replace empty string with default user image path
 
-		// Update the user's collections array
-		await User.findByIdAndUpdate(createdBy, { $push: { collections: collection._id } });
+		if (imageUrl !== '') {
+			const collection = await Collection.create({ name, createdBy, description, imageUrl, categories: categoryArray });
 
-		res.status(201).json({ collection });
+			await User.findByIdAndUpdate(createdBy, { $push: { collections: collection._id } });
+
+			res.status(201).json({ collection });
+
+			// Update the user's collections array
+		} else {
+			const collection = await Collection.create({ name, createdBy, description, categories: categoryArray });
+
+			await User.findByIdAndUpdate(createdBy, { $push: { collections: collection._id } });
+
+			res.status(201).json({ collection });
+		}
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ message: 'Internal Server Error' });
@@ -61,10 +72,13 @@ router.put('/collections/:id/edit', async (req, res, next) => {
 	const { name, description, imageUrl, createdBy, categories } = req.body;
 
 	try {
-
 		const categoryArray = await Category.find({ category: { $in: categories } });
 
-		const collection = await Collection.findByIdAndUpdate(id, { name, description, imageUrl, categories: categoryArray }, { new: true });
+		const collection = await Collection.findByIdAndUpdate(
+			id,
+			{ name, description, imageUrl, categories: categoryArray },
+			{ new: true }
+		);
 
 		res.status(200).json(collection);
 	} catch (error) {
