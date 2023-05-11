@@ -58,10 +58,13 @@ router.get('/collections/:id', async (req, res, next) => {
 
 router.put('/collections/:id/edit', async (req, res, next) => {
 	const { id } = req.params;
-	const { name, description, imageUrl, createdBy } = req.body;
+	const { name, description, imageUrl, createdBy, categories } = req.body;
 
 	try {
-		const collection = await Collection.findByIdAndUpdate(id, { name, description, imageUrl }, { new: true });
+
+		const categoryArray = await Category.find({ category: { $in: categories } });
+
+		const collection = await Collection.findByIdAndUpdate(id, { name, description, imageUrl, categories: categoryArray }, { new: true });
 
 		res.status(200).json(collection);
 	} catch (error) {
