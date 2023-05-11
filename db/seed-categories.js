@@ -9,7 +9,7 @@ const categories = [
   { category: 'Music Production' },
   { category: 'Digital Illustration' },
   { category: 'Gaming' },
-  { category: 'Photography' },
+  { category: 'Photography Equipment' },
   { category: 'Gym' },
   { category: 'Football' },
   { category: 'Basketball' },
