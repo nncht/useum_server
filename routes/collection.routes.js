@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const Collection = require('../models/Collection.model');
 const User = require('../models/User.model');
 const Category = require('../models/Category.model');
+const Item = require('../models/Item.model');
 
 router.post('/collections', async (req, res, next) => {
 	try {
@@ -81,6 +82,37 @@ router.put('/collections/:id/edit', async (req, res, next) => {
 		);
 
 		res.status(200).json(collection);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: 'Internal Server Error' });
+		next(error);
+	}
+});
+
+
+router.put('/collections/:id/add-item', async (req, res, next) => {
+	const { id } = req.params;
+	const { item } = req.body;
+
+	try {
+
+		//if item is already in collection, return error
+		const collection = await Collection.findById(id);
+		const itemExists = collection.items.includes(item);
+
+
+		if (itemExists) {
+			res.status(400).json({ message: 'Item already exists in collection' });
+			return;
+		} else {
+
+		const collection = await Collection.findByIdAndUpdate(
+			id,
+			{ $push: { items: item } },
+			{ new: true }
+		);
+
+		res.status(200).json(collection);}
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ message: 'Internal Server Error' });
