@@ -4,12 +4,17 @@ const scripts = [
   'wipe-categories.js',
   'wipe-collections.js',
   'wipe-users.js',
+  'wipe-comments.js',
+  'wipe-items.js',
   'seed-users.js',
   'seed-categories.js',
   'seed-collections.js',
+  'seed-comments.js',
+  'seed-items.js',
   'follower-script.js',
   'collections-createdby-script.js',
-  'collections-likes-script.js'
+  'collections-likes-script.js', 
+  'assignitems-script.js'
 ];
 
 function runScript(scriptPath) {

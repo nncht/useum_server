@@ -5,7 +5,7 @@ const CommentSchema = new Schema(
         title: {
             type: String,
             required: [true, 'Title is required.'],
-            unique: true,
+            unique: false,
         },
         body: {
             type: String,
