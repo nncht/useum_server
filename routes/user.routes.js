@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User.model');
 const Collection = require('../models/Collection.model');
+const Category = require('../models/Category.model');
 const { isAuthenticated } = require('../middleware/jwt.middleware');
 
 
@@ -31,10 +32,7 @@ router.get('/users/:id', async (req, res, next) => {
 			return;
 		}
 
-
-
-
-		const user = await User.findById(id).populate('collections');
+		const user = await User.findById(id).populate('collections').populate('categories');
 		console.log(user)
 
 		res.status(200).json(user);
