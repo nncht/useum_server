@@ -14,7 +14,7 @@ const scripts = [
   'follower-script.js',
   'collections-createdby-script.js',
   'collections-likes-script.js', 
-  'assignitems-script.js'
+  // 'assignitems-script.js'
 ];
 
 function runScript(scriptPath) {
