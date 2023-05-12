@@ -29,9 +29,9 @@ const collectionSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Item'
     }],
-    reviews: [{
+    comments: [{
       type: Schema.Types.ObjectId,
-      ref: 'Review'
+      ref: 'Comments'
     }],
     likes: [{
       type: Schema.Types.ObjectId,
