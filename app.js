@@ -32,6 +32,9 @@ app.use("/", uploadRoutes);
 const categoryRoutes = require("./routes/categories.routes");
 app.use("/", categoryRoutes);
 
+const profileRoutes = require("./routes/profile.routes");
+app.use("/", profileRoutes);
+
 
 
 
