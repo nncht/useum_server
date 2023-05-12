@@ -32,7 +32,7 @@ router.get('/users/:id', async (req, res, next) => {
 			return;
 		}
 
-		const user = await User.findById(id).populate('collections').populate('categories');
+		const user = await User.findById(id).populate('collections').populate('categories').populate('items');
 		console.log(user)
 
 		res.status(200).json(user);
@@ -46,18 +46,32 @@ router.get('/users/:id', async (req, res, next) => {
 router.put('/users/:_id', async (req, res, next) => {
 	try {
 		const { _id } = req.params;
-		const { email, password, username } = req.body;
+		const { email, password, username, imageUrl, headerImageUrl, userbio, pronouns, categories  } = req.body;
 
 		if (!mongoose.Types.ObjectId.isValid(_id)) {
 			res.status(400).json({ message: 'Specified id is not valid' });
 			return;
 		}
 
-		const updateUser = await User.findByIdAndUpdate(_id, { email, password, username }, { new: true });
+		const categoryArray = await Category.find({ category: { $in: categories } });
+
+
+
+		const updateUser = await User.findByIdAndUpdate(_id, { email, password, username, imageUrl, headerImageUrl, userbio, pronouns, categories: categoryArray  }, { new: true });
 
 		res.status(200).json(updateUser);
 	} catch (error) {
-		res.status(500).json({ message: 'Internal Server Error' });
+
+		if (error.code === 11000) {
+			res.status(500).json({
+			  message:
+				"Username and email need to be unique. Either username or email is already used.",
+			});
+		  } else {
+
+
+		res.status(500).json({ message: 'Internal Server Error' })
+		  }
 		next(error);
 	}
 });
