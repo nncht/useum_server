@@ -14,6 +14,9 @@ const scripts = [
   'follower-script.js',
   'collections-createdby-script.js',
   'collections-likes-script.js', 
+  'assign-gaming-script.js',
+  'assign-programming-script.js',
+  'assign-sport-fitness-script.js'
   // 'assignitems-script.js'
 ];
 
