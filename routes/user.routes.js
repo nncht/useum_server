@@ -136,4 +136,50 @@ router.delete("/users/:_id", async (req, res, next) => {
   }
 });
 
+// Follow user
+
+router.post("/:_userId/follow/:_followedUserId", async (req, res) => {
+  try {
+    // get the currently logged in user
+    const user = await User.findById(req.params._userId);
+    // set the user to be followed
+    const followedUser = await User.findById(req.params._followedUserId);
+    if (!followedUser) return res.status(404).send({ error: "User not found" });
+    // add the followedUser id to the  user's following array
+    user.following.push(followedUser._id);
+    // add the user id to followedUser's followers array
+    followedUser.followers.push(user._id);
+    await Promise.all([user.save(), followedUser.save()]);
+    res.send({ message: `You are now following ${followedUser.username}` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Server error" });
+  }
+});
+
+// Unfollow user
+router.post("/:_userId/unfollow/:_followedUserId", async (req, res) => {
+  try {
+    // get the currently logged in user
+    const user = await User.findById(req.params._userId);
+    // set the user to be unfollowed
+    const followedUser = await User.findById(req.params._followedUserId);
+    if (!followedUser) return res.status(404).send({ error: "User not found" });
+    // remove the followedUser id from user's following array
+    user.following = user.following.filter(
+      (followedUserId) =>
+        followedUserId.toString() !== followedUser._id.toString()
+    );
+    // remove the user id from followedUser's followers array
+    followedUser.followers = followedUser.followers.filter(
+      (followerId) => followerId.toString() !== user._id.toString()
+    );
+    await Promise.all([user.save(), followedUser.save()]);
+    res.send({ message: `You have unfollowed ${followedUser.username}` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Server error" });
+  }
+});
+
 module.exports = router;
