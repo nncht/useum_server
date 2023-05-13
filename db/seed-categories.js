@@ -3,10 +3,31 @@ const Category = require('../models/Category.model');
 
 // array of category names
 const categories = [
-  { category: 'Books' },
-  { category: 'Movies' },
-  { category: 'Music' },
-  // add more categories here
+  { category: 'Gaming' },
+  { category: 'Programming' },
+  { category: 'Content Creation' },
+  { category: 'UX/UI Design' },
+  { category: 'Graphic Design' },
+  { category: 'Photography & Video' },
+  { category: 'Traditional Art' },
+  { category: 'Digital Art' },
+  { category: 'Musical Instruments' },
+  { category: 'Audio Engineering' },
+  { category: 'Tailoring & Fashion Design' },
+  { category: 'Cosmetics & Beauty' },
+  { category: 'Crafts & DIY' },
+  { category: 'Cooking & Baking' },
+  { category: 'Wine & Beer Making' },
+  { category: 'Gardening & Landscaping' },
+  { category: 'Travel & Exploration' },
+  { category: 'Language Learning & Translation' },
+  { category: 'Writing & Journalism' },
+  { category: 'Film & TV Production' },
+  { category: 'Acting & Theater' },
+  { category: 'Cosplay & Role-playing' },
+  { category: 'Sport & Fitness' },
+  { category: 'Outdoor Activities' },
+  { category: 'Water Sports' }
 ];
 
 const MONGO_URI =

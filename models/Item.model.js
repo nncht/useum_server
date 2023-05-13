@@ -1,9 +1,10 @@
 const { Schema, model } = require("mongoose");
 
-const Collection = require("./Collection.model");
-const Review = require("./Review.model");
-const User = require("./User.model");
-const Category = require("./Category.model");
+
+const Collection = require('./Collection.model');
+const Comment = require('./Comment.model');
+const User = require('./User.model');
+const Category = require('./Category.model');
 
 const itemSchema = new Schema(
   {
@@ -43,12 +44,11 @@ const itemSchema = new Schema(
         ref: "User",
       },
     ],
-    reviews: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Review",
-      },
-    ],
+    comments: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Comment'
+    }],
+    
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "User",

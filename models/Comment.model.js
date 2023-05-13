@@ -1,20 +1,14 @@
 const { Schema, model } = require("mongoose");
 
-const reviewSchema = new Schema(
+const CommentSchema = new Schema(
     {
         title: {
             type: String,
             required: [true, 'Title is required.'],
-            unique: true,
+            unique: false,
         },
-        description: {
+        body: {
             type: String,
-        },
-        rating: {
-            type: Number,
-            required: [true, 'Rating is required.'],
-            min: 1,
-            max: 5
         },
         user: {
             type: Schema.Types.ObjectId,
@@ -30,6 +24,6 @@ const reviewSchema = new Schema(
     }
 );
 
-const Review = model("Review", reviewSchema);
+const Comment = model("Comment", CommentSchema);
 
-module.exports = Review;
+module.exports = Comment;

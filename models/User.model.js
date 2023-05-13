@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const Category = require('./Category.model');
 const Collection = require('./Collection.model');
 const Item = require('./Item.model');
-const Review = require('./Review.model');
+const Review = require('./Comment.model');
 
 
 const userSchema = new Schema(
@@ -52,9 +52,13 @@ const userSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Item'
     }],
+    bookmarks: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Bookmarks'
+    }],
     categories: [{
       type: Schema.Types.ObjectId,
-      ref: 'Category'
+      ref: 'Book'
     }],
     followers: [{
       type: Schema.Types.ObjectId,
@@ -64,7 +68,7 @@ const userSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User'
     }],
-    reviews: [{
+    comments: [{
       type: Schema.Types.ObjectId,
       ref: 'Review'
     }]

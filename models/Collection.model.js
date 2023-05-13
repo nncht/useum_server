@@ -1,9 +1,11 @@
 const { Schema, model } = require("mongoose");
 
-const User = require("./User.model");
-const Item = require("./Item.model");
-const Review = require("./Review.model");
-const Category = require("./Category.model");
+const User = require('./User.model');
+const Item = require('./Item.model');
+const Comment = require('./Comment.model');
+const Category = require('./Category.model');
+
+
 
 const collectionSchema = new Schema(
   {
@@ -24,42 +26,25 @@ const collectionSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    items: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Item",
-      },
-    ],
-    reviews: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Review",
-      },
-    ],
-    likes: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    sharedBy: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    followers: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    categories: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Category",
-      },
-    ],
+    
+    items: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Item'
+    }],
+    comments: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Comment'
+    }],
+    likes: [{
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }],
+    categories: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Category'
+    }],
+
+
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
