@@ -7,6 +7,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware");
 const router = express.Router();
 const saltRounds = 10;
 
+// Signup routes
 router.post("/signup", async (req, res, next) => {
   const { email, password, username, imageUrl } = req.body;
 
@@ -98,6 +99,7 @@ router.post("/signup", async (req, res, next) => {
   }
 });
 
+// Login routes
 router.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
 

@@ -43,6 +43,7 @@ router.get("/users", async (req, res, next) => {
 //   }
 // });
 
+// Request user profile
 router.get("/users/:username", async (req, res, next) => {
   try {
     const { username } = req.params;
@@ -63,40 +64,59 @@ router.get("/users/:username", async (req, res, next) => {
   }
 });
 
-
-router.put('/users/:_id', async (req, res, next) => {
-	try {
-		const { _id } = req.params;
-		const { email, password, username, imageUrl, headerImageUrl, userbio, pronouns, categories  } = req.body;
+router.put("/users/:_id", async (req, res, next) => {
+  try {
+    const { _id } = req.params;
+    const {
+      email,
+      password,
+      username,
+      imageUrl,
+      headerImageUrl,
+      userbio,
+      pronouns,
+      categories,
+    } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(_id)) {
       res.status(400).json({ message: "Specified id is not valid" });
       return;
     }
 
-		const categoryArray = await Category.find({ category: { $in: categories } });
+    const categoryArray = await Category.find({
+      category: { $in: categories },
+    });
 
+    const updateUser = await User.findByIdAndUpdate(
+      _id,
+      {
+        email,
+        password,
+        username,
+        imageUrl,
+        headerImageUrl,
+        userbio,
+        pronouns,
+        categories: categoryArray,
+      },
+      { new: true }
+    );
 
-
-		const updateUser = await User.findByIdAndUpdate(_id, { email, password, username, imageUrl, headerImageUrl, userbio, pronouns, categories: categoryArray  }, { new: true });
-
-		res.status(200).json(updateUser);
-	} catch (error) {
-
-		if (error.code === 11000) {
-			res.status(500).json({
-			  message:
-				"Username and email need to be unique. Either username or email is already used.",
-			});
-		  } else {
-
-
-		res.status(500).json({ message: 'Internal Server Error' })
-		  }
-		next(error);
-	}
+    res.status(200).json(updateUser);
+  } catch (error) {
+    if (error.code === 11000) {
+      res.status(500).json({
+        message:
+          "Username and email need to be unique. Either username or email is already used.",
+      });
+    } else {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+    next(error);
+  }
 });
 
+// Delete user account
 router.delete("/users/:_id", async (req, res, next) => {
   try {
     const { _id } = req.params;
