@@ -1,11 +1,11 @@
 const { spawn } = require('child_process');
 
 const scripts = [
-  'wipe-categories.js',
-  'wipe-collections.js',
-  'wipe-users.js',
-  'wipe-comments.js',
-  'wipe-items.js',
+//  'wipe-categories.js',
+//  'wipe-collections.js',
+//  'wipe-users.js',
+//  'wipe-comments.js',
+//  'wipe-items.js',
   'seed-users.js',
   'seed-categories.js',
   'seed-collections.js',
