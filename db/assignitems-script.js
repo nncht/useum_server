@@ -13,19 +13,23 @@ mongoose.connect('mongodb://127.0.0.1:27017/association_server', { useNewUrlPars
       promises.push(Item.find({ categories: collection.categories }).limit(6).exec()
 
         .then((items) => {
+          let itemPromises = [];
           for (let item of items) {
             item.collections.push(collection._id);
-            promises.push(item.save());
-            collection.items.push(item._id);
+            itemPromises.push(item.save());
           }
-          return collection.save();
+          return Promise.allSettled(itemPromises)
+            .then(() => {
+              collection.items = items.map((item) => item._id);
+              return collection.save();
+            });
         }));
     }
-    return Promise.all(promises); // Wait for all promises to resolve
+    return Promise.allSettled(promises); // Wait for all promises to settle
   })
   .then(() => {
-    console.log('Items assigned to collections successfully!');
-    return mongoose.disconnect(); // Wait for all sessions to close
+    console.log('Items and collections assigned successfully!');
+    return mongoose.disconnect(); // Disconnect from database
   })
   .then(() => {
     console.log('Disconnected from database!');
@@ -34,3 +38,4 @@ mongoose.connect('mongodb://127.0.0.1:27017/association_server', { useNewUrlPars
     console.error('Error:', error);
     mongoose.disconnect();
   });
+
