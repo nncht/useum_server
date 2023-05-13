@@ -1,7 +1,8 @@
 const { Schema, model } = require("mongoose");
 
+
 const Collection = require('./Collection.model');
-const Comments = require('./Comment.model');
+const Comment = require('./Comment.model');
 const User = require('./User.model');
 const Category = require('./Category.model');
 
@@ -9,7 +10,7 @@ const itemSchema = new Schema(
   {
     name: {
       type: String,
-      required: [true, 'Name is required.'],
+      required: [true, "Name is required."],
       unique: true,
     },
     description: {
@@ -17,31 +18,44 @@ const itemSchema = new Schema(
     },
     imageUrl: {
       type: String,
-      default:"No image"
+      default: "/images/default/default-item.svg",
     },
-    categories: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Category'
-    }],
-    collections: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Collection'
-    }],
-    users: [{
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }],
-    likes: [{
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }],
+    categories: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
+    collections: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Collection",
+      },
+    ],
+    users: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     comments: [{
       type: Schema.Types.ObjectId,
-      ref: 'Comments'
+      ref: 'Comment'
     }],
+    
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

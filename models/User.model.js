@@ -24,8 +24,24 @@ const userSchema = new Schema(
       unique: true,
       trim: true
     },
+
+    userbio: {
+      type: String,
+      maxlength: 2000
+    },
+
+    pronouns: {
+      type: String,
+    },
+
     imageUrl: {
-      type: String
+      type: String,
+      default: '/images/default/default-profile.png'
+    },
+
+    headerImageUrl: {
+      type: String,
+      default: '/images/default/default-header.png'
     },
 
     collections: [{

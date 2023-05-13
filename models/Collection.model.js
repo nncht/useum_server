@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 
 const User = require('./User.model');
 const Item = require('./Item.model');
-const Review = require('./Comment.model');
+const Comment = require('./Comment.model');
 const Category = require('./Category.model');
 
 
@@ -11,27 +11,29 @@ const collectionSchema = new Schema(
   {
     name: {
       type: String,
-      required: [true, 'Name is required.'],
-      unique: true
+      required: [true, "Name is required."],
+      unique: true,
     },
     description: {
-      type: String
+      type: String,
     },
+
     imageUrl: {
       type: String,
-      default:"No image"
+      default: "/images/default/default-collection.svg",
     },
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: 'User'
+      ref: "User",
     },
+    
     items: [{
       type: Schema.Types.ObjectId,
       ref: 'Item'
     }],
     comments: [{
       type: Schema.Types.ObjectId,
-      ref: 'Comments'
+      ref: 'Comment'
     }],
     likes: [{
       type: Schema.Types.ObjectId,
@@ -46,7 +48,7 @@ const collectionSchema = new Schema(
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
-    timestamps: true
+    timestamps: true,
   }
 );
 
