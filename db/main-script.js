@@ -1,11 +1,11 @@
 const { spawn } = require('child_process');
 
 const scripts = [
-  'wipe-categories.js',
-  'wipe-collections.js',
-  'wipe-users.js',
-  'wipe-comments.js',
-  'wipe-items.js',
+//  'wipe-categories.js',
+//  'wipe-collections.js',
+//  'wipe-users.js',
+//  'wipe-comments.js',
+//  'wipe-items.js',
   'seed-users.js',
   'seed-categories.js',
   'seed-collections.js',
@@ -14,7 +14,10 @@ const scripts = [
   'follower-script.js',
   'collections-createdby-script.js',
   'collections-likes-script.js', 
-  // 'assignitems-script.js'
+  'assign-gaming-script.js',
+  'assign-programming-script.js',
+  'assign-sport-fitness-script.js',
+  'assignitems-script.js'
 ];
 
 function runScript(scriptPath) {
