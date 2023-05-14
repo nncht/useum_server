@@ -579,13 +579,14 @@ const Item = require('../models/Item.model');
                 description: 'An open-source, in-memory data structure store, used as a database, cache, and message broker.',
                 category: 'Programming',
               },
-                    
-            
+
+
     ];
 
     const MONGO_URI =
-    process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/association_server"
-  
+    'mongodb+srv://jchorzempa:Wl4xl6L2F11Yk8Mx@useumcluster.wevpu44.mongodb.net/?retryWrites=true&w=majority'
+
+
   mongoose
   .connect(MONGO_URI)
   .then(() => {
