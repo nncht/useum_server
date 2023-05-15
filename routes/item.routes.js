@@ -48,6 +48,10 @@ router.post('/items', async (req, res, next) => {
 			// Update the collections with the new item
 			await Collection.updateMany({ _id: { $in: collections } }, { $push: { items: newItem } }, { new: true });
 
+			await User.findByIdAndUpdate(createdBy, {
+				$push: { items: newItem._id },
+			  });
+
 			// Send back a success response with the newly created item
 			res.status(201).json({ item: newItem });
 		} else {
@@ -59,6 +63,10 @@ router.post('/items', async (req, res, next) => {
 				collections,
 			});
 			await Collection.updateMany({ _id: { $in: collections } }, { $push: { items: newItem } }, { new: true });
+
+			await User.findByIdAndUpdate(createdBy, {
+				$push: { items: newItem._id },
+			  });
 			res.status(201).json({ item: newItem });
 		}
 	} catch (error) {
