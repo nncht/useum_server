@@ -1,33 +1,32 @@
 const { Schema, model } = require("mongoose");
-const Category = require('./Category.model');
-const Collection = require('./Collection.model');
-const Item = require('./Item.model');
-const Comment = require('./Comment.model');
-
+const Category = require("./Category.model");
+const Collection = require("./Collection.model");
+const Item = require("./Item.model");
+const Comment = require("./Comment.model");
 
 const userSchema = new Schema(
   {
     email: {
       type: String,
-      required: [true, 'Email is required.'],
+      required: [true, "Email is required."],
       unique: true,
       lowercase: true,
-      trim: true
+      trim: true,
     },
     password: {
       type: String,
-      required: [true, 'Password is required.']
+      required: [true, "Password is required."],
     },
     username: {
       type: String,
-      required: [true, 'Username is required.'],
+      required: [true, "Username is required."],
       unique: true,
-      trim: true
+      trim: true,
     },
 
     userbio: {
       type: String,
-      maxlength: 2000
+      maxlength: 2000,
     },
 
     pronouns: {
@@ -36,52 +35,64 @@ const userSchema = new Schema(
 
     imageUrl: {
       type: String,
-      default: '/images/default/default-profile.png'
+      default: "/images/default/default-profile.png",
     },
 
     headerImageUrl: {
       type: String,
-      default: '/images/default/default-header.png'
+      default: "/images/default/default-header.svg",
     },
 
-    collections: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Collection'
-    }],
-    items: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Item'
-    }],
-    bookmarks: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Item',
-    }, {
-      type: Schema.Types.ObjectId,
-      ref: 'Collection',
-    }],
-    categories: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Category'
-    }],
-    followers: [{
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }],
-    following: [{
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }],
-    comments: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Comment'
-    }]
-
-
-
+    collections: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Collection",
+      },
+    ],
+    items: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Item",
+      },
+    ],
+    bookmarks: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Item",
+      },
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Collection",
+      },
+    ],
+    categories: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    following: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
-    timestamps: true
+    timestamps: true,
   }
 );
 
