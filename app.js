@@ -33,6 +33,10 @@ const categoryRoutes = require("./routes/categories.routes");
 app.use("/", categoryRoutes);
 
 
+const bookmarksRoutes = require("./routes/bookmarks.routes");
+app.use("/", bookmarksRoutes);
+
+
 
 
 
