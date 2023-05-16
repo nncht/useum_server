@@ -36,6 +36,9 @@ app.use("/", categoryRoutes);
 const bookmarksRoutes = require("./routes/bookmarks.routes");
 app.use("/", bookmarksRoutes);
 
+const searchRoutes = require("./routes/search.routes");
+app.use("/", searchRoutes);
+
 
 
 

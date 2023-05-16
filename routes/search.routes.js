@@ -17,16 +17,17 @@ router.get("/search", async (req, res, next) => {
         let users;
 
         if (search) {
+          console.log("SEARCHING FOR: ", search)
             collections = await Collection.aggregate([{
                 '$search': {
                   'index': 'CollectionSearchIndex',
-                  'autocomplete': {
+                  'text': {
                     'query': search,
                     'path': 'name'
                   }
                 }
               }, {
-                '$limit': 5
+                '$limit': 3
               }
             ]);
 
@@ -34,13 +35,13 @@ router.get("/search", async (req, res, next) => {
                 {
                   '$search': {
                     'index': 'ItemSearchIndex',
-                    'autocomplete': {
+                    'text': {
                       'query': search,
                       'path': 'name'
                     }
                   }
                 }, {
-                  '$limit': 5
+                  '$limit': 3
                 }, {
                   '$project': {
                     '_id': 1,
@@ -54,13 +55,13 @@ router.get("/search", async (req, res, next) => {
                 {
                   '$search': {
                     'index': 'UserSearchIndex',
-                    'autocomplete': {
-                      'query': 'Hannes',
+                    'text': {
+                      'query': search,
                       'path': 'username'
                     }
                   }
                 }, {
-                  '$limit': 5
+                  '$limit': 3
                 }, {
                   '$project': {
                     '_id': 1,
