@@ -155,41 +155,44 @@ router.put('/items/:id/edit', async (req, res, next) => {
 
 router.post('/items/:id', async (req, res, next) => {
 	const { id } = req.params;
-	const { createdBy, collectionId } = req.body;
+	const { createdBy, collection } = req.body;
 
 	console.log("WHAHHHAT", createdBy);
 
 	try {
 
-		const item = await Item.findById(id)
+		// const item = await Item.findById(id).populate('collections').populate('createdBy').populate('comments');
 
-		if (item.comments.length !== 0) {
+		// if (item.comments.length !== 0) {
 
-		//find the comment the user made
-		const userComment = await Comment.findOne({ user: createdBy });
+		// //find the comment the user made
+		// const userComment = await Comment.findMany({ user: createdBy });
 
-		console.log(userComment)
+		// console.log("USER COMMENT", userComment)
 
-		//delete the users comment on the item
-		await Comment.findByIdAndDelete(userComment._id);
-		}
+
+		// //delete the users comment on the item
+		// await Item.findByIdAndUpdate(id, { $pull: { comments: userComment._id } }, { new: true });
+
+		// //delete the comment from the user
+		// await User.findByIdAndUpdate(createdBy, { $pull: { comments: userComment._id } }, { new: true });
+
+		// //is the comment gone?
+		// const comments = await Item.findById(id).populate('comments');
+		// console.log("COMMENTS", comments)
+
 
 
 		//Take the item out of the user's items array
-	await User.findByIdAndUpdate(createdBy, { $pull: { items: id } }, { new: true });
+	// Delete the item from the database
+	await User.findByIdAndUpdate(createdBy, { $pull: { items: id } });
 
-	await Collection.findByIdAndUpdate(collectionId, { $pull: { items: id } }, { new: true });
-
-
-		await Item.findByIdAndUpdate(id, { $pull: { collections: collectionId }  }, { new: true });
-
-
-console.log("ITEM NOW", item)
+	// Delete item from the current collection
+	await Collection.findByIdAndUpdate(collection, { $pull: { items: id } });
 
 
+	await Item.findByIdAndUpdate(id, { $pull: { collections: collection }  }, { new: true });
 
-		//This would actually delete the item from the database
-		// await Item.findByIdAndDelete(id);
 
 		res.status(200).json({ message: 'Item deleted successfully' });
 	} catch (error) {
