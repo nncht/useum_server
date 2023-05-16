@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User.model');
 const Collection = require('../models/Collection.model');
 const Category = require('../models/Category.model');
+const Item = require('../models/Item.model');
+const Comment = require('../models/Comment.model');
 const { isAuthenticated } = require('../middleware/jwt.middleware');
 
 router.get('/users', async (req, res, next) => {
@@ -47,7 +49,7 @@ router.get('/users/:username', async (req, res, next) => {
 	try {
 		const { username } = req.params;
 
-		const user = await User.findOne({ username }).populate('collections').populate('categories');
+		const user = await User.findOne({ username }).populate('collections').populate('categories').populate('items').populate('comments');
 
 		if (!user) {
 			res.status(404).json({ message: 'User not found' });
@@ -95,7 +97,7 @@ router.put('/users/:_id', async (req, res, next) => {
 	}
 });
 
-		
+
 
 // change password route
 
