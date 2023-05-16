@@ -157,7 +157,6 @@ router.post('/items/:id', async (req, res, next) => {
 	const { id } = req.params;
 	const { createdBy, collection } = req.body;
 
-	console.log("WHAHHHAT", createdBy);
 
 	try {
 
@@ -186,12 +185,15 @@ router.post('/items/:id', async (req, res, next) => {
 		//Take the item out of the user's items array
 	// Delete the item from the database
 	await User.findByIdAndUpdate(createdBy, { $pull: { items: id } });
+	console.log("Pulled the item from the user's items array")
 
 	// Delete item from the current collection
 	await Collection.findByIdAndUpdate(collection, { $pull: { items: id } });
+	console.log("Pulled the item from the collection's items array")
 
 
 	await Item.findByIdAndUpdate(id, { $pull: { collections: collection }  }, { new: true });
+	console.log("Pulled the collection from the item's collections array")
 
 
 		res.status(200).json({ message: 'Item deleted successfully' });
