@@ -115,7 +115,7 @@ router.put("/collections/:id/edit", async (req, res, next) => {
 
 router.put("/collections/:id/add-item", async (req, res, next) => {
   const { id } = req.params;
-  const { item } = req.body;
+  const { item, user } = req.body;
 
   try {
     //if item is already in collection, return error
@@ -125,15 +125,21 @@ router.put("/collections/:id/add-item", async (req, res, next) => {
     if (itemExists) {
       res.status(400).json({ message: "Item already exists in collection" });
       return;
-    } else {
-      const collection = await Collection.findByIdAndUpdate(
+    }
+
+    const itemUpdateColl = await Item.findByIdAndUpdate(item, { $push: { collections: id } }, { new: true });
+    const itemUpdateUser = await Item.findByIdAndUpdate(item, { $push: { users: user } }, { new: true });
+
+      const collectionUpdate = await Collection.findByIdAndUpdate(
         id,
         { $push: { items: item } },
         { new: true }
       );
 
-      res.status(200).json(collection);
-    }
+
+
+      res.status(200).json({Item: itemUpdateUser, Collection: collectionUpdate});
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
