@@ -10,7 +10,7 @@ const User = require('../models/User.model');
 router.post('/items', async (req, res, next) => {
 	try {
 		// Retrieve the item data from the request body
-		const { name, description, imageUrl, createdBy, categories, collections, commentTitle, comment } = req.body;
+		const { name, description, imageUrl, createdBy, categories, collections, commentTitle, comment, currentUser } = req.body;
 
 		const categoryArray = await Category.find({
 			category: { $in: categories },
@@ -23,6 +23,8 @@ router.post('/items', async (req, res, next) => {
 
 		});
 
+		const userCommentArray = [userComment._id];
+
 
 
 		// Do some validation on the input data
@@ -31,6 +33,8 @@ router.post('/items', async (req, res, next) => {
 			return;
 		}
 
+
+//Create a free item (meaning not attached to a collection from the start)
 		if (collections === '') {
 			const newFreeItem = await Item.create({
 				name,
@@ -42,53 +46,56 @@ router.post('/items', async (req, res, next) => {
 			res.status(201).json({ item: newFreeItem });
 		}
 
+
+//Create an item that is attached to a collection from the start
+
+let newItem;
+
 		if (imageUrl !== '') {
-			// Create the new item
-			const newItem = await Item.create({
+			//if the user has chosen an image, use that image
+			newItem = await Item.create({
 				name,
 				description,
 				imageUrl,
 				createdBy,
 				categories: categoryArray,
-				collections
+				collections,
+				comments: [userComment._id],
 			});
-
-
-			//Update the item with the comment
-			await Item.findByIdAndUpdate(newItem._id, { $push: { comments: userComment } }, { new: true });
-
-			//update the user with the new comment
-
-
-			// Update the collections with the new item
-			await Collection.updateMany({ _id: { $in: collections } }, { $push: { items: newItem } }, { new: true });
-
-			await User.findByIdAndUpdate(createdBy, {
-				$push: { items: newItem._id }, $push: { comments: userComment },
-			});
-
-			// Send back a success response with the newly created item
-			res.status(201).json({ item: newItem });
-
 		} else {
-
-			const newItem = await Item.create({
+			//if the user has not chosen an image, use the default image
+			newItem = await Item.create({
 				name,
 				description,
 				createdBy,
 				categories: categoryArray,
 				collections,
+				comments: [userComment._id],
 			});
-			await Item.findByIdAndUpdate(newItem._id, { $push: { comments: userComment } }, { new: true });
+		}
+
+		const populatedUserComment = await Comment.findById(userComment._id).populate('user');
 
 
-			await Collection.updateMany({ _id: { $in: collections } }, { $push: { items: newItem } }, { new: true });
 
+			//Update the item'S "comments" array with the comment
+			await Item.findByIdAndUpdate(newItem._id, { $push: { comments: populatedUserComment } }, { new: true }).populate('comments');
+
+			// Update the collections "items" array with the new item
+			await Collection.updateMany({ _id: { $in: collections } }, { $push: { items: newItem } }, { new: true }).populate('items');
+
+			//update the users "items" array with the new item and the users "comments" with the new comment
 			await User.findByIdAndUpdate(createdBy, {
 				$push: { items: newItem._id }, $push: { comments: userComment },
-			});
+			}).populate('items').populate('comments');
+
+			//update the newly added item with the current Users ID in the item's "users" array
+			await Item.findByIdAndUpdate(newItem._id, { $push: { users: currentUser._id } }, { new: true }).populate('users');
+
+			// Send back a success response with the newly created item
 			res.status(201).json({ item: newItem });
-		}
+
+
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ message: 'Internal Server Error' });
@@ -119,10 +126,23 @@ router.get('/items/:id', async (req, res, next) => {
 
 		// Retrieve the item details from the database
 
-		const item = await Item.findById(id).populate('categories').populate('collections').populate('createdBy');
+		const item = await Item.findById(id).populate('categories').populate('collections').populate('createdBy').populate('comments').populate('users');
+
+		const itemComments = await Item.findById(id).populate('comments');
+
+		let populatedComments = [];
+
+		for (const comment of itemComments.comments) {
+			const theComments = await Comment.findById(comment._id).populate('user');
+			populatedComments.push(theComments);
+		}
+
+
+
+
 
 		// Send back a success response with the item
-		res.status(200).json({ item });
+		res.status(200).json({ item: item, comments: populatedComments });
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ message: 'Internal Server Error' });
@@ -132,20 +152,68 @@ router.get('/items/:id', async (req, res, next) => {
 
 router.put('/items/:id/edit', async (req, res, next) => {
 	const { id } = req.params;
-	const { name, description, imageUrl, createdBy, categories } = req.body;
+	const { name, description, imageUrl, createdBy, categories, comment, commentTitle, currentUserId } = req.body;
 
 	try {
 		const categoryArray = await Category.find({
 			category: { $in: categories },
 		});
 
-		const item = await Item.findByIdAndUpdate(
-			id,
-			{ name, description, imageUrl, categories: categoryArray },
-			{ new: true }
-		);
+// make an array of all this items comments
 
-		res.status(200).json(item);
+		const itemComments = await Item.findById(id).populate('comments');
+
+		console.log(itemComments.comments)
+
+		if( itemComments.comments.length === 0) {
+			const newComment =  await Comment.create({
+				title: commentTitle,
+				body: comment,
+				user: currentUserId,
+			});
+
+			console.log('comment created')
+
+			const item = await Item.findByIdAndUpdate(
+				id,
+				{ name, description, imageUrl, categories: categoryArray, $push: { comments: newComment } },
+				{ new: true }
+			);		res.status(200).json(item);
+
+		} else {
+
+			//see if the users ID is in this specific item's "comments" array
+
+			async function updateItemWithComment(currentUserId, itemComments) {
+				let commentToUpdateId = null;
+
+				itemComments.comments.forEach((comment) => {
+				  if (comment.user._id.toString() === currentUserId) {
+					commentToUpdateId = comment._id;
+					return; // Exit the loop after finding the matching comment
+				  }
+				});
+
+				if (commentToUpdateId) {
+				  await Comment.findByIdAndUpdate(commentToUpdateId, {
+					title: commentTitle,
+					body: comment
+				  }, { new: true });
+				}
+
+				const item = await Item.findByIdAndUpdate(
+				  id,
+				  { name, description, imageUrl, categories: categoryArray },
+				  { new: true }
+				);
+
+				return item;
+			  }
+
+			  const item = await updateItemWithComment(currentUserId, itemComments);
+
+
+		res.status(200).json(item); }
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ message: 'Internal Server Error' });
@@ -155,37 +223,43 @@ router.put('/items/:id/edit', async (req, res, next) => {
 
 router.post('/items/:id', async (req, res, next) => {
 	const { id } = req.params;
-	const { createdBy, collection } = req.body;
+	const { createdBy, collection, currentUser } = req.body;
 
 
 	try {
 
-		// const item = await Item.findById(id).populate('collections').populate('createdBy').populate('comments');
+		//find the item in question
 
-		// if (item.comments.length !== 0) {
+		const itemInQuestion = await Item.findById(id).populate('comments');
 
-		// //find the comment the user made
-		// const userComment = await Comment.findMany({ user: createdBy });
+		async function deleteComment(currentUser, id, itemInQuestion) {
+			const commentToDelete = itemInQuestion.comments.find((comment) => {
+				console.log("This is the comment", comment)
+			  return comment.user == currentUser;
+			});
 
-		// console.log("USER COMMENT", userComment)
+			if (commentToDelete) {
+				console.log("Deleting the comment", commentToDelete)
+			  // Delete the comment from the database
+			  await Item.findByIdAndUpdate(id, { $pull: { comments: commentToDelete._id } }, { new: true });
+			} else {
+					console.log("No comment to delete")
 
+		  }
+		}
 
-		// //delete the users comment on the item
-		// await Item.findByIdAndUpdate(id, { $pull: { comments: userComment._id } }, { new: true });
-
-		// //delete the comment from the user
-		// await User.findByIdAndUpdate(createdBy, { $pull: { comments: userComment._id } }, { new: true });
-
-		// //is the comment gone?
-		// const comments = await Item.findById(id).populate('comments');
-		// console.log("COMMENTS", comments)
+		  deleteComment(currentUser, id, itemInQuestion);
 
 
 
 		//Take the item out of the user's items array
 	// Delete the item from the database
-	await User.findByIdAndUpdate(createdBy, { $pull: { items: id } });
+	await User.findByIdAndUpdate(currentUser, { $pull: { items: id } });
 	console.log("Pulled the item from the user's items array")
+
+	//pull the user from items user array
+
+	await Item.findByIdAndUpdate(id, { $pull: { users: currentUser } });
 
 	// Delete item from the current collection
 	await Collection.findByIdAndUpdate(collection, { $pull: { items: id } });
