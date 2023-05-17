@@ -242,6 +242,7 @@ router.post('/items/:id', async (req, res, next) => {
 				console.log("Deleting the comment", commentToDelete)
 			  // Delete the comment from the database
 			  await Item.findByIdAndUpdate(id, { $pull: { comments: commentToDelete._id } }, { new: true });
+			  await User.findByIdAndUpdate(currentUser, { $pull: { comments: commentToDelete._id } }, { new: true });
 			} else {
 					console.log("No comment to delete")
 
