@@ -31,7 +31,8 @@ const categories = [
 ];
 
 const MONGO_URI =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/association_server";
+'mongodb+srv://jchorzempa:Wl4xl6L2F11Yk8Mx@useumcluster.wevpu44.mongodb.net/?retryWrites=true&w=majority'
+
 
 mongoose
   .connect(MONGO_URI)

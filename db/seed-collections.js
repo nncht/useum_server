@@ -6,97 +6,97 @@ const collections = [
       name: 'Gaming Gear Collection',
       description: 'A collection of gaming gear and accessories for the ultimate gaming setup.',
       },
-      
+
       {
       name: 'Gaming Essentials Collection',
       description: 'A collection of essential gaming items, including controllers, headsets, and charging docks.',
       },
-      
+
       {
       name: 'Gaming Upgrade Collection',
       description: 'A collection of gaming upgrades for enhancing your gaming experience.',
       },
-      
+
       {
       name: 'Gaming Decor Collection',
       description: 'A collection of gaming-themed decor and accessories for your gaming space.',
       },
-      
+
       {
       name: 'Gaming Performance Collection',
       description: 'A collection of performance-enhancing gaming peripherals and accessories.',
       },
-      
+
       {
       name: 'Gaming Maintenance Collection',
       description: 'A collection of maintenance items for keeping your gaming equipment in top condition.',
       },
-      
+
       {
       name: 'Gaming Setup Collection',
       description: 'A collection of items for setting up a complete gaming station.',
       },
-      
+
       {
       name: 'Gaming Bundles Collection',
       description: 'A collection of gaming bundles that include multiple items for a complete gaming experience.',
       },
-      
+
       {
       name: 'Gaming Gift Collection',
       description: 'A collection of gaming-related gifts for the gamer in your life.',
       },
-      
+
       {
       name: 'Gaming Tech Collection',
       description: 'A collection of gaming-related technology and accessories for gamers.',
       },
-      
+
       {
       name: 'Gaming Fun Collection',
       description: 'A collection of fun and entertaining gaming-related items.',
       },
-      
+
       {
       name: 'Gaming Necessities Collection',
       description: 'A collection of necessary gaming items for any gamer.',
       },
-      
+
       {
       name: 'Gaming Aesthetics Collection',
       description: 'A collection of aesthetically pleasing gaming accessories for your gaming setup.',
       },
-      
+
       {
       name: 'Gaming Innovation Collection',
       description: 'A collection of innovative and unique gaming-related items.',
       },
-      
+
       {
       name: 'Gaming Versatility Collection',
       description: 'A collection of versatile gaming peripherals and accessories.',
       },
-      
+
       {
       name: 'Gaming Storage Collection',
       description: 'A collection of gaming storage solutions for organizing your gaming equipment and accessories.',
       },
-      
+
       {
       name: 'Gaming Style Collection',
       description: 'A collection of stylish gaming peripherals and accessories.',
       },
-      
+
       {
       name: 'Gaming Experience Collection',
       description: 'A collection of items for enhancing your gaming experience.',
       },
-      
+
       {
       name: 'Gaming Add-Ons Collection',
       description: 'A collection of add-ons for your existing gaming setup.',
       },
-      
+
       {
       name: 'Gaming Value Collection',
       description: 'A collection of high-quality gaming items at a great value.',
@@ -105,102 +105,102 @@ const collections = [
       name: 'Book Lover Collection',
       description: 'A collection of books for the avid reader and book enthusiast.',
       },
-      
+
       {
       name: 'Classics Collection',
       description: 'A collection of classic books from various genres and time periods.',
       },
-      
+
       {
       name: 'Essential Reading Collection',
       description: 'A collection of essential books for any well-rounded library.',
       },
-      
+
       {
       name: 'Personal Library Collection',
       description: 'A collection of books for building your own personal library.',
       },
-      
+
       {
       name: 'Top Rated Books Collection',
       description: 'A collection of highly rated books from various genres and authors.',
       },
-      
+
       {
       name: 'Reading Nook Collection',
       description: 'A collection of cozy and comfortable books for your reading nook.',
       },
-      
+
       {
       name: 'Book Club Collection',
       description: 'A collection of books for starting or joining a book club.',
       },
-      
+
       {
       name: 'Literary Classics Collection',
       description: 'A collection of classic books from the canon of English literature.',
       },
-      
+
       {
       name: 'Novel Collection',
       description: 'A collection of novels from various genres and authors.',
       },
-      
+
       {
       name: 'Travel Books Collection',
       description: 'A collection of books for armchair travel and exploration.',
       },
-      
+
       {
       name: 'Favorite Books Collection',
       description: 'A collection of favorite books from various genres and authors.',
       },
-      
+
       {
       name: 'Non-Fiction Collection',
       description: 'A collection of non-fiction books on various subjects and topics.',
       },
-      
+
       {
       name: 'Biography Collection',
       description: 'A collection of biographies and memoirs from various people and time periods.',
       },
-      
+
       {
       name: 'Historical Fiction Collection',
       description: 'A collection of historical fiction books from various authors and time periods.',
       },
-      
+
       {
       name: 'Poetry Collection',
       description: 'A collection of poetry books from various poets and time periods.',
       },
-      
+
       {
       name: 'Fantasy Collection',
       description: 'A collection of fantasy books from various authors and time periods.',
       },
-      
+
       {
       name: 'Mystery Collection',
       description: 'A collection of mystery books from various authors and time periods.',
       },
-      
+
       {
       name: 'Science Fiction Collection',
       description: 'A collection of science fiction books from various authors and time periods.',
       },
-      
+
       {
       name: 'Young Adult Collection',
       description: 'A collection of young adult books from various authors and genres.',
       },
-      
+
       {
       name: 'Audio Books Collection',
       description: 'A collection of audio books for listening to your favorite books on-the-go.',
       },
-      
+
       {
       name: 'Home Recording Studio Collection',
       description: 'A collection of equipment and software for setting up a home recording studio.',
@@ -413,17 +413,17 @@ const collections = [
       name: 'Football Essentials',
       description: 'A collection of essential items for any football player, including cleats, balls, cones, and training equipment.',
       },
-      
+
       {
       name: 'Football Gear Collection',
       description: 'A collection of various football gear including cleats, gloves, and compression clothing for the ultimate game-day experience.',
       },
-      
+
       {
       name: 'Football Training Collection',
       description: 'A collection of football training equipment including agility ladders, resistance bands, and cones to help take your game to the next level.',
       },
-      
+
       {
       name: 'Football Fan Collection',
       description: 'A collection of football-themed items including team jerseys, hats, and memorabilia for the ultimate fan.',
@@ -434,40 +434,40 @@ const collections = [
         description: 'A collection of essential items for any basketball player, including basketballs, training cones, and resistance bands.',
 
       },
-      
+
       {
         name: 'Basketball Training Collection',
         description: 'A collection of basketball training equipment including jump ropes, agility ladders, and resistance bands to help improve your skills on the court.',
 
       },
-      
+
       {
         name: 'Basketball Accessories Collection',
         description: 'A collection of basketball accessories including headbands, wristbands, and sweat towels for a complete game-day experience.',
 
       },
-      
+
       {
         name: 'Basketball Fan Collection',
         description: 'A collection of basketball-themed items including team jerseys, hats, and memorabilia for the ultimate fan.',
 
-      }, 
+      },
 
       {
         name: 'Programming Essentials',
         description: 'A collection of essential programming resources including textbooks, reference guides, and online courses for beginners.',
       },
-      
+
       {
         name: 'Programming Language Collection',
         description: 'A collection of resources focused on a specific programming language, including books, courses, and video tutorials to help you master it.',
       },
-      
+
       {
         name: 'Web Development Collection',
         description: 'A collection of resources focused on web development including front-end and back-end technologies, frameworks, and tools.',
       },
-      
+
       {
         name: 'Software Development Collection',
         description: 'A collection of resources focused on software development including project management tools, version control systems, and software testing frameworks.',
@@ -477,17 +477,17 @@ const collections = [
         name: 'RGB Light Strips Collection',
         description: 'A collection of different RGB light strips to add color to any room or setting.',
       },
-      
+
       {
         name: 'Smart RGB Light Collection',
         description: 'A collection of smart RGB lights that can be controlled with a smartphone or voice assistant, and can be customized to fit any mood or setting.',
       },
-      
+
       {
         name: 'RGB Light Accessories Collection',
         description: 'A collection of accessories for RGB lights, including extension cables, connectors, and mounting brackets.',
       },
-      
+
       {
         name: 'RGB Gaming Setup Collection',
         description: 'A collection of RGB lights and accessories for a complete RGB gaming setup.',
@@ -495,9 +495,11 @@ const collections = [
 
   ];
 
-const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/association_server';
 
-mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+
+
+mongoose.connect('mongodb+srv://jchorzempa:Wl4xl6L2F11Yk8Mx@useumcluster.wevpu44.mongodb.net/?retryWrites=true&w=majority'
+, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('Connected to database');
 

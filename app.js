@@ -32,6 +32,9 @@ app.use("/", uploadRoutes);
 const categoryRoutes = require("./routes/categories.routes");
 app.use("/", categoryRoutes);
 
+const searchRoutes = require("./routes/search.routes");
+app.use("/", searchRoutes);
+
 
 const bookmarksRoutes = require("./routes/bookmarks.routes");
 app.use("/", bookmarksRoutes);

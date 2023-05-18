@@ -3,7 +3,7 @@ const User = require('../models/User.model');
 const bcrypt = require('bcryptjs');
 
 const saltRounds = 10;
-const users = 
+const users =
 [{"email":"llabastida0@topsy.com","password":"edkLBhfK2M","username":"Lavinie LaBastida"},
 {"email":"bsheach1@nbcnews.com","password":"GeEZLWjRR6PE","username":"Barnabe Sheach"},
 {"email":"jbooty2@auda.org.au","password":"V7iL6gqo","username":"Jesse Booty"},
@@ -115,10 +115,14 @@ Promise.all(users.map(async user => {
   };
 }))
 .then(hashedUsers => {
-  const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/association_server';
 
-  mongoose.connect(MONGO_URI)
+
+  mongoose.connect('mongodb+srv://jchorzempa:Wl4xl6L2F11Yk8Mx@useumcluster.wevpu44.mongodb.net/?retryWrites=true&w=majority'
+  )
   .then(() => {
+
+    console.log(`Connected to database!`)
+
     User.create(hashedUsers)
     .then(() => console.log('Database seeded with hashed passwords'))
     .catch(error => console.error(error))
