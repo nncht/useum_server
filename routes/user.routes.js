@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User.model');
 const Collection = require('../models/Collection.model');
 const Category = require('../models/Category.model');
+const Item = require('../models/Item.model');
+const Comment = require('../models/Comment.model');
 const { isAuthenticated } = require('../middleware/jwt.middleware');
 
 router.get('/users', async (req, res, next) => {
@@ -47,7 +49,7 @@ router.get('/users/:username', async (req, res, next) => {
 	try {
 		const { username } = req.params;
 
-		const user = await User.findOne({ username }).populate('collections').populate('categories').populate('followers').populate('following');
+		const user = await User.findOne({ username }).populate('collections').populate('categories').populate('comments').populate('items');
 
 		if (!user) {
 			res.status(404).json({ message: 'User not found' });
@@ -60,6 +62,8 @@ router.get('/users/:username', async (req, res, next) => {
 		next(error);
 	}
 });
+
+
 
 
 router.put('/users/:_id', async (req, res, next) => {
@@ -263,5 +267,28 @@ router.post("/:_userId/unfollow/:_followedUserId", async (req, res) => {
     res.status(500).send({ error: "Server error" });
   }
 });
+
+
+
+router.get('/users/:username/follow', async (req, res, next) => {
+	try {
+		const { username } = req.params;
+
+		const user = await User.findOne({ username }).populate('followers').populate('following');
+
+		if (!user) {
+			res.status(404).json({ message: 'User not found' });
+			return;
+		}
+
+		res.status(200).json(user);
+	} catch (error) {
+		res.status(500).json({ message: 'Internal Server Error' });
+		next(error);
+	}
+});
+
+
+
 
 module.exports = router;
