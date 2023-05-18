@@ -106,7 +106,7 @@ let newItem;
 router.get('/items', async (req, res, next) => {
 	try {
 		// Retrieve all the items from the database
-		const items = await Item.find({}).populate('categories').populate('collections').populate('createdBy').populate('comments');
+		const items = await Item.find({}).populate('categories').populate('collections').populate('createdBy').populate('comments').populate('likes');
 
 		// Send back a success response with the items
 		res.status(200).json({ items });
