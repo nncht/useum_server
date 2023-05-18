@@ -47,7 +47,7 @@ router.get('/users/:username', async (req, res, next) => {
 	try {
 		const { username } = req.params;
 
-		const user = await User.findOne({ username }).populate('collections').populate('categories');
+		const user = await User.findOne({ username }).populate('collections').populate('categories').populate('followers').populate('following');
 
 		if (!user) {
 			res.status(404).json({ message: 'User not found' });
@@ -95,7 +95,7 @@ router.put('/users/:_id', async (req, res, next) => {
 	}
 });
 
-		
+
 
 // change password route
 
