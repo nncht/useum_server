@@ -101,14 +101,29 @@ router.post("/signup", async (req, res, next) => {
 
 // Login routes
 router.post("/login", async (req, res, next) => {
-  const { email, password } = req.body;
+  const { loginName, password } = req.body;
 
   try {
-    if (email === "" || password === "") {
+
+    if (loginName === "" || password === "") {
       res.status(400).json({ message: "Provide email and password." });
     }
 
-    const foundUser = await User.findOne({ email });
+    //test if login word is email or username
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    let email;
+    let username;
+    let foundUser;
+
+    if (emailRegex.test(loginName)) {
+      email = loginName;
+      foundUser = await User.findOne({ email });
+    } else {
+      username = loginName;
+      foundUser = await User.findOne({ username });
+    }
+
 
     if (!foundUser) {
       res.status(400).json({ message: "User not found." });
@@ -130,6 +145,8 @@ router.post("/login", async (req, res, next) => {
       res.status(401).json({ message: "Unable to authenticate the user" });
     }
   } catch (error) {
+    console.log(error);
+    next(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
