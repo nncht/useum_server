@@ -96,14 +96,14 @@ router.post('/items', async (req, res, next) => {
 
 		//update the users "items" array with the new item
 		await User.findByIdAndUpdate(createdBy, {
-			$push: { items: newItem._id },
-		}).populate('items');
+			$push: { items: newItem._id, comments: userComment._id },
+		}).populate('items').populate('comments');
 
-		// and the users "comments" with the new comment
+		// // and the users "comments" with the new comment
 
-		await User.findByIdAndUpdate(createdBy, {
-			$push: { comments: userComment },
-		}).populate('comments');
+		// await User.findByIdAndUpdate(createdBy, {
+		// 	$push: { comments: userComment },
+		// }).populate('comments');
 
 		//update the newly added item with the current Users ID in the item's "users" array
 		await Item.findByIdAndUpdate(newItem._id, { $push: { users: currentUser._id } }, { new: true }).populate('users');
