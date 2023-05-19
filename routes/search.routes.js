@@ -9,6 +9,10 @@ const Item = require("../models/Item.model");
 
 
 
+//THIS IS FOR ATLAS SEARCH
+
+
+
 // router.get("/search", async (req, res, next) => {
 //     try {
 //         const { search } = req.query;
@@ -84,6 +88,10 @@ const Item = require("../models/Item.model");
 //         next(error);
 //     }
 // });
+
+
+
+//THIS IS FOR LOCAL SEARCH
 
 
 
