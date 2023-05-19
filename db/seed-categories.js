@@ -27,7 +27,14 @@ const categories = [
   { category: "Outdoor Activities" },
   { category: "Water Sports" },
   { category: "Other" },
-];
+  {category: "Programming"},
+  {category: "Cinema & Movies"},
+  {category: "Literature"},
+  {category: "Music"},
+  {category: "Books & Comics"},
+  {category: "Anime & Manga"},
+  {category: "Activism & Social Movements"},
+  {category: "Politics"} ]
 
 const MONGO_URI =
   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/association_server";
