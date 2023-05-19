@@ -268,8 +268,7 @@ router.post("/:_userId/unfollow/:_followedUserId", async (req, res) => {
   }
 });
 
-
-
+// Get user with populated followers and users this user is following
 router.get('/users/:username/follow', async (req, res, next) => {
 	try {
 		const { username } = req.params;
