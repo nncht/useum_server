@@ -15,6 +15,8 @@ router.post('/items', async (req, res, next) => {
 
 		console.log('Item created by: ', createdBy);
 
+		console.log('Comment made on this item:', comment);
+
 		const categoryArray = await Category.find({
 			category: { $in: categories },
 		});
@@ -33,25 +35,28 @@ router.post('/items', async (req, res, next) => {
 			return;
 		}
 
-		//Create a free item (meaning not attached to a collection from the start)
-		//if comment is an empty string, leave the comments array empty
-		if (collections === '' && comment === '') {
-			const newFreeItem = await Item.create({
-				name,
-				description,
-				imageUrl,
-				createdBy,
-				categories: categoryArray,
-				comments: [],
-			});
 
-			//update the users "items" array with the new item
-			await User.findByIdAndUpdate(createdBy, {
-				$push: { items: newFreeItem._id },
-			}).populate('items');
 
-			res.status(201).json({ item: newFreeItem });
-		}
+		// //Create a free item (meaning not attached to a collection from the start)
+		// //if comment is an empty string, leave the comments array empty
+		// if (collections === '' && comment === '') {
+		// 	const newFreeItem = await Item.create({
+		// 		name,
+		// 		description,
+		// 		imageUrl,
+		// 		createdBy,
+		// 		categories: categoryArray,
+		// 		// comments: [],
+		// 	});
+
+		// 	//update the users "items" array with the new item
+		// 	await User.findByIdAndUpdate(createdBy, {
+		// 		$push: { items: newFreeItem._id},
+		// 	}).populate('items');
+
+
+		// 	res.status(201).json({ item: newFreeItem  });
+		// }
 
 		//Create an item that is attached to a collection from the start
 
@@ -83,7 +88,7 @@ router.post('/items', async (req, res, next) => {
 		const populatedUserComment = await Comment.findById(userComment._id).populate('user');
 
 		//Update the item'S "comments" array with the comment
-		if (commentTitle !== '' && comment !== '') {
+		if (comment !== '') {
 			await Item.findByIdAndUpdate(newItem._id, { $push: { comments: populatedUserComment } }, { new: true }).populate(
 				'comments'
 			);
@@ -99,14 +104,11 @@ router.post('/items', async (req, res, next) => {
 			$push: { items: newItem._id, comments: userComment._id },
 		}).populate('items').populate('comments');
 
-		// // and the users "comments" with the new comment
 
-		// await User.findByIdAndUpdate(createdBy, {
-		// 	$push: { comments: userComment },
-		// }).populate('comments');
 
 		//update the newly added item with the current Users ID in the item's "users" array
 		await Item.findByIdAndUpdate(newItem._id, { $push: { users: currentUser._id } }, { new: true }).populate('users');
+
 
 		// Send back a success response with the newly created item
 		res.status(201).json({ item: newItem });
