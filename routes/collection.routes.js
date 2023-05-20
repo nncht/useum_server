@@ -51,6 +51,7 @@ router.post("/collections", async (req, res, next) => {
       });
 
       res.status(201).json({ collection });
+
     }
   } catch (error) {
     console.error(error);
@@ -80,7 +81,8 @@ router.get("/collections/:id", async (req, res, next) => {
     const collection = await Collection.findById(id)
       .populate("categories")
       .populate("createdBy")
-      .populate("items");
+      .populate("items")
+      .populate("likes");
 
     res.status(200).json(collection);
   } catch (error) {

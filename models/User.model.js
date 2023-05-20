@@ -65,6 +65,16 @@ const userSchema = new Schema(
         ref: "Collection",
       },
     ],
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Item",
+      },
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Collection",
+      },
+    ],
     categories: [
       {
         type: Schema.Types.ObjectId,
