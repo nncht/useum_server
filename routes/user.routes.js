@@ -49,7 +49,7 @@ router.get('/users/:username', async (req, res, next) => {
 	try {
 		const { username } = req.params;
 
-		const user = await User.findOne({ username }).populate('collections').populate('categories').populate('items').populate('comments');
+		const user = await User.findOne({ username }).populate('collections').populate('categories').populate('comments').populate('items');
 
 		if (!user) {
 			res.status(404).json({ message: 'User not found' });
@@ -62,6 +62,8 @@ router.get('/users/:username', async (req, res, next) => {
 		next(error);
 	}
 });
+
+
 
 
 router.put('/users/:_id', async (req, res, next) => {
@@ -350,6 +352,28 @@ router.post('/:_id/unlike/:thingId', async (req, res, next) => {
 
 
 
+
+
+
+
+// Get user with populated followers and users this user is following
+router.get('/users/:username/follow', async (req, res, next) => {
+	try {
+		const { username } = req.params;
+
+		const user = await User.findOne({ username }).populate('followers').populate('following');
+
+		if (!user) {
+			res.status(404).json({ message: 'User not found' });
+			return;
+		}
+
+		res.status(200).json(user);
+	} catch (error) {
+		res.status(500).json({ message: 'Internal Server Error' });
+		next(error);
+	}
+});
 
 
 

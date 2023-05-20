@@ -4,21 +4,20 @@ const Category = require("../models/Category.model");
 // array of category names
 const categories = [
   { category: "Gaming" },
-  { category: "Programming" },
+  { category: "Software Engineering" },
   { category: "Content Creation" },
   { category: "UX/UI Design" },
   { category: "Graphic Design" },
   { category: "Photography & Video" },
   { category: "Traditional Art" },
   { category: "Digital Art" },
-  { category: "Music / Audio Engineering" },
-  { category: "Tailoring & Fashion Design" },
-  { category: "Cosmetics & Beauty" },
+  { category: "Music Production" },
+  { category: "Fashion & Tailoring" },
+  { category: "Beauty & Cosmetics" },
   { category: "Crafts & DIY" },
-  { category: "Cooking & Baking" },
-  { category: "Wine & Beer Making" },
+  { category: "Culinary" },
   { category: "Gardening & Landscaping" },
-  { category: "Travel & Exploration" },
+  { category: "Travel" },
   { category: "Language Learning & Translation" },
   { category: "Writing & Journalism" },
   { category: "Film & TV Production" },
@@ -28,7 +27,14 @@ const categories = [
   { category: "Outdoor Activities" },
   { category: "Water Sports" },
   { category: "Other" },
-];
+  {category: "Programming"},
+  {category: "Cinema & Movies"},
+  {category: "Literature"},
+  {category: "Music"},
+  {category: "Books & Comics"},
+  {category: "Anime & Manga"},
+  {category: "Activism & Social Movements"},
+  {category: "Politics"} ]
 
 const MONGO_URI =
   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/association_server";
