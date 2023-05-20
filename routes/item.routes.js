@@ -290,4 +290,44 @@ router.post('/items/:id', async (req, res, next) => {
 	}
 });
 
+
+
+// add a comment in the add-item modal
+
+router.put('/items/:id/comment', async (req, res, next) => {
+	const { id } = req.params;
+	const { comment, currentUserId } = req.body;
+
+	try {
+		const newComment = await Comment.create({
+
+			body: comment,
+			user: currentUserId,
+		});
+
+
+		const newlyAddedItem = await Item.findByIdAndUpdate(
+			id,
+			{ $push: { comments: newComment } },
+			{ new: true }
+		);
+
+		res.status(200).json(newlyAddedItem);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: 'Internal Server Error' });
+		next(error);
+	}
+});
+
+
+
+
+
+
+
+
+
+
+
 module.exports = router;
