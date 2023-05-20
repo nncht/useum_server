@@ -177,7 +177,7 @@ router.put('/users/:_id/change-password', async (req, res, next) => {
 router.post('/users/:_id/delete', async (req, res, next) => {
 	try {
 		const { _id } = req.params;
-    const {password} = req.body
+		const { password } = req.body;
 
 		if (password === '') {
 			res.json({ message: 'Please fill in all fields' });
@@ -196,21 +196,97 @@ router.post('/users/:_id/delete', async (req, res, next) => {
 			return;
 		}
 
-    // check if the password is correct
+		// check if the password is correct
 
-    const isPasswordCorrect = bcrypt.compareSync(password, foundUser.password);
-    console.log('Password is Correct', isPasswordCorrect);
+		const isPasswordCorrect = bcrypt.compareSync(password, foundUser.password);
+		console.log('Password is Correct', isPasswordCorrect);
 
-    if (!isPasswordCorrect) {
-      res.json({ message: 'Password invalid' });
-      return;
-    } else {
+		if (!isPasswordCorrect) {
+			res.json({ message: 'Password invalid' });
+			return;
+		} else {
+			await User.findByIdAndDelete(_id);
 
-      await User.findByIdAndDelete(_id);
+			res.status(200).json({
+				message: `User with ${_id} is removed successfully. Redirecting ... `,
+				confirm: true,
+			});
+		}
+	} catch (error) {
+		res.status(500).json({ message: 'Internal Server Error' });
+		next(error);
+	}
+});
 
-		res.status(200).json({
-			message: `User with ${_id} is removed successfully. Redirecting ... `, confirm: true
-		}); }
+// Follow user
+
+router.post('/:_userId/follow/:_followedUserId', async (req, res) => {
+	try {
+		// get the currently logged in user
+		const user = await User.findById(req.params._userId);
+		// set the user to be followed
+		const followedUser = await User.findById(req.params._followedUserId);
+		if (!followedUser) return res.status(404).send({ error: 'User not found' });
+		// add the followedUser id to the  user's following array
+		user.following.push(followedUser._id);
+		// add the user id to followedUser's followers array
+		followedUser.followers.push(user._id);
+		await Promise.all([user.save(), followedUser.save()]);
+		res.send({ message: `You are now following ${followedUser.username}` });
+	} catch (error) {
+		console.error(error);
+		res.status(500).send({ error: 'Server error' });
+	}
+});
+
+// Unfollow user
+router.post('/:_userId/unfollow/:_followedUserId', async (req, res) => {
+	try {
+		// get the currently logged in user
+		const user = await User.findById(req.params._userId);
+		// set the user to be unfollowed
+		const followedUser = await User.findById(req.params._followedUserId);
+		if (!followedUser) return res.status(404).send({ error: 'User not found' });
+		// remove the followedUser id from user's following array
+		user.following = user.following.filter(
+			(followedUserId) => followedUserId.toString() !== followedUser._id.toString()
+		);
+		// remove the user id from followedUser's followers array
+		followedUser.followers = followedUser.followers.filter(
+			(followerId) => followerId.toString() !== user._id.toString()
+		);
+		await Promise.all([user.save(), followedUser.save()]);
+		res.send({ message: `You have unfollowed ${followedUser.username}` });
+	} catch (error) {
+		console.error(error);
+		res.status(500).send({ error: 'Server error' });
+	}
+});
+
+// routes for the function of enabling users to LIKE stuff
+
+router.post('/:_id/like/:thingId', async (req, res, next) => {
+	try {
+		const { _id, thingId } = req.params;
+
+		const currentUser = await User.findById(_id)
+		currentUser.likes.push(thingId);
+		await currentUser.save();
+
+		const item = await Item.findById(thingId);
+    if (item) {
+		item.likes.push(currentUser._id);
+		await item.save();
+	} else { console.log("the id does not belong to an item!") }
+
+	  const collection = await Collection.findById(thingId);
+    if (collection) {
+		collection.likes.push(currentUser._id);
+		await collection.save();
+
+	} else { console.log("the id does not belong to a collection!") }
+
+		res.status(200).json(currentUser);
 
 
 	} catch (error) {
@@ -219,51 +295,63 @@ router.post('/users/:_id/delete', async (req, res, next) => {
 	}
 });
 
+router.post('/:_id/unlike/:thingId', async (req, res, next) => {
+	try {
+		const { _id, thingId } = req.params;
 
-// Follow user
+		const currentUser = await User.findById(_id);
 
-router.post("/:_userId/follow/:_followedUserId", async (req, res) => {
-  try {
-    // get the currently logged in user
-    const user = await User.findById(req.params._userId);
-    // set the user to be followed
-    const followedUser = await User.findById(req.params._followedUserId);
-    if (!followedUser) return res.status(404).send({ error: "User not found" });
-    // add the followedUser id to the  user's following array
-    user.following.push(followedUser._id);
-    // add the user id to followedUser's followers array
-    followedUser.followers.push(user._id);
-    await Promise.all([user.save(), followedUser.save()]);
-    res.send({ message: `You are now following ${followedUser.username}` });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: "Server error" });
-  }
+		currentUser.likes = currentUser.likes.filter((like) => like.toString() !== thingId);
+
+		await currentUser.save();
+
+		const item = await Item.findById(thingId);
+		if (item) {
+			item.likes = item.likes.filter((like) => like.toString() !== currentUser._id.toString());
+			await item.save();
+		} else {
+			console.log('the id does not belong to an item!');
+		}
+
+		const collection = await Collection.findById(thingId);
+		if (collection) {
+			collection.likes = collection.likes.filter(
+				(like) => like.toString() !== currentUser._id.toString()
+			);
+			await collection.save();
+		} else {
+			console.log('the id does not belong to a collection!');
+		}
+
+
+
+
+		res.status(200).json(currentUser);
+	} catch (error) {
+		res.status(500).json({ message: 'Internal Server Error' });
+		next(error);
+	}
 });
 
-// Unfollow user
-router.post("/:_userId/unfollow/:_followedUserId", async (req, res) => {
-  try {
-    // get the currently logged in user
-    const user = await User.findById(req.params._userId);
-    // set the user to be unfollowed
-    const followedUser = await User.findById(req.params._followedUserId);
-    if (!followedUser) return res.status(404).send({ error: "User not found" });
-    // remove the followedUser id from user's following array
-    user.following = user.following.filter(
-      (followedUserId) =>
-        followedUserId.toString() !== followedUser._id.toString()
-    );
-    // remove the user id from followedUser's followers array
-    followedUser.followers = followedUser.followers.filter(
-      (followerId) => followerId.toString() !== user._id.toString()
-    );
-    await Promise.all([user.save(), followedUser.save()]);
-    res.send({ message: `You have unfollowed ${followedUser.username}` });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: "Server error" });
-  }
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router;
