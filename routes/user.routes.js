@@ -378,4 +378,50 @@ router.get('/users/:username/follow', async (req, res, next) => {
 
 
 
+router.get('/likes/:_id', async (req, res, next) => {
+	try {
+	  const { _id } = req.params;
+
+	  if (!mongoose.Types.ObjectId.isValid(_id)) {
+		res.status(400).json({ message: 'Specified id is not valid' });
+		return;
+	  }
+
+	  const user = await User.findById(_id)
+
+	  const itemLikes = await Item.find({ _id: { $in: user.likes } });
+	  const collectionLikes = await Collection.find({ _id: { $in: user.likes } });
+
+
+	  res.status(200).json({ itemLikes, collectionLikes });
+
+
+	} catch (error) {
+
+	  if (error instanceof mongoose.Error.CastError) {
+		  res.json({ message: 'ID not found for Model, trying other Model' });
+		  } else {
+
+
+	  res.status(500).json({ message: 'Internal Server Error' });
+	  next(error);
+	} }
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = router;
