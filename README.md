@@ -1,49 +1,36 @@
 
-# SERVER -  /association/ - network your collections
+<p align="center">
+<img src="https://img.shields.io/github/deployments/nncht/association_server/cyclic:prod" />
+        <img src="https://img.shields.io/github/contributors/nncht/association_client" />
+        <img src="https://badgen.net/github/commits/nncht/association_server/main" />
+        <img src="https://img.shields.io/github/commit-activity/w/nncht/association_server" />
+        <img src="https://img.shields.io/github/issues-pr-closed/nncht/association_server" />
+        <img src="https://img.shields.io/npm/v/npm" />
+        <img src="https://img.shields.io/github/languages/count/nncht/association_server" />
+        <img src="https://img.shields.io/github/languages/top/nncht/association_server?color=yellow" />
+        <img src="https://badges.aleen42.com/src/node.svg" />
 
-Repo for the SERVER of the Ironhack M3 Project brought to you by The Three Amigos
+</p>
+</br>
 
-![My Skills](https://skills.thijs.gg/icons?i=nodejs,mongodb&theme=light)
+<h1 align="center">/USEUM - showcase yourself!</h1>
 
-## Project Description
+<p align="center">Repo for the <b>backend code</b> of the Ironhack Bootcamp M3 Project</p>
 
-The third and final project of the Ironhack Web Dev Bootcamp Course.
+</br>
+</br>
+<p align="center" style="font-size: 18px">To see what this is <b>all about</b> and really get into the <b>nitty-gritty</b> of this project as well as to see the frontend code written in <b>React</b></p>
 
-It will make use of MongoDB, Express, React and Node.
+</br>
 
-And it will be unapologetically great.
+<p align="center" style="font-size: 18px">Click <b><a href="https://github.com/nncht/association_client">here</a></b></p>
 
-### How to
+</br>
+</br>
 
-always run
-
-```bash
-npm install
-```
-
-before
-
-```bash
-npm run dev
-```
-
-to make sure everything is there
-
-### Basic Functionalities (Minimum Viable Product)
-
-Coming soon.
-
-### Advanced Functionalities
-
-Coming a bit later.
-
-## Technologies SERVER
-
-For sure the MERN stack.
-
-## Project Structure SERVER
-
-Here we will make sense of the convoluted network of parts that make up the SERVER side of our project.
+---
+</br>
+</br>
 
 <h2 align="center"> Contributors </h2>
 
