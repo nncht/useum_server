@@ -48,6 +48,7 @@ router.get("/search", async (req, res, next) => {
             _id: 1,
             name: 1,
             imageUrl: 1,
+            description: 1,
           },
         },
       ]);
