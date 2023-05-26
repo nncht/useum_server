@@ -14,7 +14,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 // const FRONTEND_URL = process.env.ORIGIN || "http://localhost:5173";
-const FRONTEND_URL = "https://useum.netlify.app/";
+const FRONTEND_URL = "https://useum.netlify.app";
 
 // Middleware configuration
 module.exports = (app) => {
