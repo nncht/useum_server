@@ -3,6 +3,7 @@ const Category = require("./Category.model");
 const Collection = require("./Collection.model");
 const Item = require("./Item.model");
 const Comment = require("./Comment.model");
+const mongoose = require("mongoose");
 
 const userSchema = new Schema(
   {
@@ -106,6 +107,18 @@ const userSchema = new Schema(
   }
 );
 
+
 const User = model("User", userSchema);
+
+const MONGO_URI =
+   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/association_server";
+
+async function run() {
+  await mongoose.connect(MONGO_URI);
+  await User.findOne(); // Works!
+  console.log("Found the User Model")
+}
+
+run()
 
 module.exports = User;
