@@ -5,6 +5,7 @@ const Collection = require('./Collection.model');
 const Comment = require('./Comment.model');
 const User = require('./User.model');
 const Category = require('./Category.model');
+const mongoose = require("mongoose");
 
 const itemSchema = new Schema(
   {
@@ -48,7 +49,7 @@ const itemSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Comment'
     }],
-    
+
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -60,5 +61,16 @@ const itemSchema = new Schema(
 );
 
 const Item = model("Item", itemSchema);
+
+const MONGO_URI =
+   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/association_server";
+
+async function run() {
+  await mongoose.connect(MONGO_URI);
+  await Item.findOne(); // Works!
+  console.log("Found the Item Model")
+}
+
+run()
 
 module.exports = Item;
