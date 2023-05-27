@@ -220,15 +220,36 @@ router.put('/items/:id/edit', async (req, res, next) => {
 						},
 						{ new: true }
 					);
-				}
 
-				const item = await Item.findByIdAndUpdate(
-					id,
-					{ name, description, imageUrl, categories: categoryArray },
-					{ new: true }
-				);
+					const item = await Item.findByIdAndUpdate(
+						id,
+						{ name, description, imageUrl, categories: categoryArray },
+						{ new: true }
+					);
+
+					return item
+
+				} else {
+
+					const newComment = await Comment.create({
+						title: commentTitle,
+						body: comment,
+						user: currentUserId,
+					});
+
+					const populatedUserComment = await Comment.findById(newComment._id).populate('user');
+
+					let item;
+
+					if (populatedUserComment !== '') {
+
+						item = await Item.findByIdAndUpdate(id, { $push: { comments: populatedUserComment } }, { new: true }).populate(
+							'comments'
+						);
+					}
 
 				return item;
+				}
 			}
 
 			const item = await updateItemWithComment(currentUserId, itemComments);
