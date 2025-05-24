@@ -12,10 +12,8 @@ const express = require("express");
 const app = express();
 
 // ✅ CORS Setup
-const allowedOrigins = [
-  process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
-  'https://useum.netlify.app',
-];
+const allowedOrigins = ['https://useum.netlify.app'];
+
 
 app.use(
   cors({
