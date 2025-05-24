@@ -11,6 +11,15 @@ const express = require("express");
 
 const app = express();
 
+// Enable CORS for your Netlify frontend
+app.use(
+  cors({
+    origin: "https://useum.netlify.app",
+    credentials: true,
+  })
+);
+
+
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
 require("./config")(app);
 
