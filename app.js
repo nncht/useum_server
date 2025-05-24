@@ -11,23 +11,24 @@ require("./db");
 const express = require("express");
 const app = express();
 
-// ✅ Define allowed origins
-const allowedOrigins = ['https://useum.netlify.app'];
+// ✅ CORS Setup: Allow frontend (Netlify) access
+const allowedOrigins = [
+  'https://useum.netlify.app',
+  process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
+];
 
-// ✅ CORS setup
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // Allow Postman, curl, etc.
+      if (!origin) return callback(null, true); // Allow Postman, curl, mobile apps (no Origin)
       if (allowedOrigins.includes(origin)) {
-        callback(null, true);
+        return callback(null, true);
       } else {
-        console.log(`Blocked by CORS: ${origin}`);
-        callback(new Error('Not allowed by CORS'));
+        return callback(new Error('Not allowed by CORS'));
       }
     },
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // Allow cookies, Authorization headers, etc.
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers from frontend
   })
 );
 
@@ -45,7 +46,13 @@ app.use("/", require("./routes/bookmarks.routes"));
 app.use("/", require("./routes/search.routes"));
 app.use("/", require("./routes/user.routes"));
 
+// ✅ Optional: Test CORS route (good for debugging)
+app.get('/test-cors', (req, res) => {
+  res.json({ message: 'CORS is working!' });
+});
+
 // ✅ Error handling (must be after all routes)
 require("./error-handling")(app);
 
+// ✅ Export app for use in server.js or main entry
 module.exports = app;
