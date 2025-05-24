@@ -1,9 +1,4 @@
 const { Schema, model } = require("mongoose");
-const Category = require("./Category.model");
-const Collection = require("./Collection.model");
-const Item = require("./Item.model");
-const Comment = require("./Comment.model");
-const mongoose = require("mongoose");
 
 const userSchema = new Schema(
   {
@@ -24,26 +19,21 @@ const userSchema = new Schema(
       unique: true,
       trim: true,
     },
-
     userbio: {
       type: String,
       maxlength: 2000,
     },
-
     pronouns: {
       type: String,
     },
-
     imageUrl: {
       type: String,
       default: "/images/default/default-profile.png",
     },
-
     headerImageUrl: {
       type: String,
       default: "/images/default/default-header.svg",
     },
-
     collections: [
       {
         type: Schema.Types.ObjectId,
@@ -102,23 +92,10 @@ const userSchema = new Schema(
     ],
   },
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,
   }
 );
 
-
 const User = model("User", userSchema);
-
-const MONGO_URI =
-   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/association_server";
-
-async function run() {
-  await mongoose.connect(MONGO_URI);
-  await User.findOne(); // Works!
-  console.log("Found the User Model")
-}
-
-run()
 
 module.exports = User;
