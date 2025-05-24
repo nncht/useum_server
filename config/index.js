@@ -13,8 +13,8 @@ const cookieParser = require("cookie-parser");
 // unless the request if from the same domain, by default express wont accept POST requests
 const cors = require("cors");
 
-const FRONTEND_URL = process.env.ORIGIN || "http://localhost:5173";
-// const FRONTEND_URL = "https://useum.netlify.app";
+// const FRONTEND_URL = process.env.ORIGIN || "http://localhost:5173";
+const FRONTEND_URL = "https://useum.netlify.app";
 
 // Middleware configuration
 module.exports = (app) => {
