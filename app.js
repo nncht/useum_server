@@ -14,7 +14,7 @@ const express = require("express");
 
 const app = express();
 
-// Enable CORS for your Netlify frontend
+// Enable CORS for Netlify frontend
 app.use(
   cors({
     origin: "https://useum.netlify.app",
