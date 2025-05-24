@@ -1,5 +1,4 @@
 // ℹ️ Gets access to environment variables/settings
-// https://www.npmjs.com/package/dotenv
 require("dotenv").config();
 
 // Import CORS
@@ -9,26 +8,37 @@ const cors = require("cors");
 require("./db");
 
 // Handles http requests (express is node js framework)
-// https://www.npmjs.com/package/express
 const express = require("express");
 
 const app = express();
 
-// Enable CORS for Netlify frontend
+// CORS Setup
+const allowedOrigins = [
+  process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
+  'https://useum.netlify.app',
+];
+
 app.use(
   cors({
-    origin: "https://useum.netlify.app",
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );
 
-
-// ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
+// Middleware setup
 require("./config")(app);
 
-// 👇 Start handling routes here
+// Routes
 const indexRoutes = require("./routes/index.routes");
 app.use("/", indexRoutes);
+
 const authRoutes = require("./routes/auth.routes");
 app.use("/", authRoutes);
 
@@ -44,23 +54,21 @@ app.use("/", uploadRoutes);
 const categoryRoutes = require("./routes/categories.routes");
 app.use("/", categoryRoutes);
 
-
 const bookmarksRoutes = require("./routes/bookmarks.routes");
 app.use("/", bookmarksRoutes);
 
 const searchRoutes = require("./routes/search.routes");
 app.use("/", searchRoutes);
 
-
-
-
-
-
 const userRoutes = require("./routes/user.routes");
 app.use("/", userRoutes);
 
+// Optional: CORS test route
+app.get('/test-cors', (req, res) => {
+  res.json({ message: 'CORS is working!' });
+});
 
-// ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
+// Error handling
 require("./error-handling")(app);
 
 module.exports = app;
