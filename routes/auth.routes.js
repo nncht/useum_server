@@ -1,160 +1,119 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const User = require("../models/User.model");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 const router = express.Router();
 const saltRounds = 10;
 
-// Signup routes
+// Signup route
 router.post("/signup", async (req, res, next) => {
   const { email, password, username, imageUrl } = req.body;
 
   try {
-    if (email === "" || password === "" || username === "") {
-      res.status(400).json({ message: "Provide email, password and username" });
-      return;
+    if (!email || !password || !username) {
+      return res.status(400).json({ message: "Provide email, password and username" });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
     if (!emailRegex.test(email)) {
-      res.status(400).json({ message: "Provide a valid email address." });
-      return;
+      return res.status(400).json({ message: "Provide a valid email address." });
     }
 
-    // Use regex to validate the password format
-    const passwordRegex =
-      /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?\-]).{8,}/;
+    const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\[\]{};':"\\|,.<>\/?\\-]).{8,}/;
     if (!passwordRegex.test(password)) {
-      res.status(400).json({
-        message:
-          "Password must have at least 8 characters and contain at least one number, one special character, one lowercase and one uppercase letter.",
+      return res.status(400).json({
+        message: "Password must have at least 8 characters and contain at least one number, one special character, one lowercase and one uppercase letter.",
       });
     }
 
     const foundUser = await User.findOne({ email });
-
     if (foundUser) {
-      res.status(400).json({ message: "User already exists." });
-      return;
+      return res.status(400).json({ message: "User already exists." });
     }
 
-    // Password hashing
     const salt = bcrypt.genSaltSync(saltRounds);
     const hashedPassword = bcrypt.hashSync(password, salt);
 
-    // If no user image is chosen, eplace empty string with default user image path
-    if (imageUrl !== "") {
-      const createdUser = await User.create({
-        email,
-        password: hashedPassword,
-        username,
-        imageUrl,
-      });
-      const {
+    const userData = {
+      email,
+      password: hashedPassword,
+      username,
+      imageUrl: imageUrl || undefined, // Optional: will use default if not provided
+    };
+
+    const createdUser = await User.create(userData);
+    const { _id, email: createdEmail, username: createdName, imageUrl: createdImageUrl } = createdUser;
+
+    return res.status(201).json({
+      user: {
+        _id,
         email: createdEmail,
         username: createdName,
-        _id: createdId,
         imageUrl: createdImageUrl,
-      } = createdUser;
-      const user = {
-        email: createdEmail,
-        username: createdName,
-        _id: createdId,
-        imageUrl: createdImageUrl,
-      };
-      res.status(201).json({ user });
-    } else {
-      const createdUser = await User.create({
-        email,
-        password: hashedPassword,
-        username,
-      });
-      const {
-        email: createdEmail,
-        username: createdName,
-        _id: createdId,
-      } = createdUser;
-      const user = {
-        email: createdEmail,
-        username: createdName,
-        _id: createdId,
-      };
-      res.status(201).json({ user });
-    }
+      },
+    });
   } catch (error) {
+    console.error("Signup error:", error);
     if (error instanceof mongoose.Error.ValidationError) {
-      res.status(500).json({ message: error.message });
+      return res.status(400).json({ message: error.message });
     } else if (error.code === 11000) {
-      res.status(500).json({
-        message:
-          "Username and email need to be unique. Either username or email is already used.",
+      return res.status(400).json({
+        message: "Username and email need to be unique. Either username or email is already used.",
       });
     } else {
-      console.log(error);
-      res.status(500).json({ message: "Internal Server Error" });
-      next(error);
+      return res.status(500).json({ message: "Internal Server Error" });
     }
   }
 });
 
-// Login routes
+// Login route
 router.post("/login", async (req, res, next) => {
   const { loginName, password } = req.body;
 
   try {
-
-    if (loginName === "" || password === "") {
-      res.status(400).json({ message: "Provide email and password." });
+    if (!loginName || !password) {
+      return res.status(400).json({ message: "Provide email/username and password." });
     }
 
-    //test if login word is email or username
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const isEmail = emailRegex.test(loginName);
 
-    let email;
-    let username;
-    let foundUser;
-
-    if (emailRegex.test(loginName)) {
-      email = loginName;
-      foundUser = await User.findOne({ email });
-    } else {
-      username = loginName;
-      foundUser = await User.findOne({ username });
-    }
-
+    const foundUser = isEmail
+      ? await User.findOne({ email: loginName })
+      : await User.findOne({ username: loginName });
 
     if (!foundUser) {
-      res.status(400).json({ message: "User not found." });
+      return res.status(400).json({ message: "User not found." });
     }
 
     const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
 
-    if (passwordCorrect) {
-      const { _id, email, username } = foundUser;
-      const payload = { _id, email, username };
-
-      const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-        algorithm: "HS256",
-        expiresIn: "6h",
-      });
-
-      res.status(200).json({ authToken });
-    } else {
-      res.status(401).json({ message: "Unable to authenticate the user" });
+    if (!passwordCorrect) {
+      return res.status(401).json({ message: "Invalid email/username or password." });
     }
+
+    const { _id, email, username } = foundUser;
+    const payload = { _id, email, username };
+
+    const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+      algorithm: "HS256",
+      expiresIn: "6h",
+    });
+
+    return res.status(200).json({ authToken });
   } catch (error) {
-    console.log(error);
-    next(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Login error:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-router.get("/verify", isAuthenticated, (req, res, next) => {
-  console.log(`req.payload`, req.payload);
-
-  res.status(200).json(req.payload);
+// Token verify route
+router.get("/verify", isAuthenticated, (req, res) => {
+  console.log("req.payload", req.payload);
+  return res.status(200).json(req.payload);
 });
 
 module.exports = router;
