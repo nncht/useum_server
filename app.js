@@ -2,6 +2,9 @@
 // https://www.npmjs.com/package/dotenv
 require("dotenv").config();
 
+// Import CORS
+const cors = require("cors");
+
 // ℹ️ Connects to the database
 require("./db");
 
