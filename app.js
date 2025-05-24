@@ -1,18 +1,17 @@
-// ℹ️ Gets access to environment variables/settings
+// ℹ️ Access environment variables/settings
 require("dotenv").config();
 
 // Import CORS
 const cors = require("cors");
 
-// ℹ️ Connects to the database
+// ℹ️ Connect to the database
 require("./db");
 
-// Handles http requests (express is node js framework)
+// Import Express
 const express = require("express");
-
 const app = express();
 
-// CORS Setup
+// ✅ CORS Setup
 const allowedOrigins = [
   process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
   'https://useum.netlify.app',
@@ -21,54 +20,40 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
+      // Allow requests with no 'origin' (like mobile apps, Postman, curl, etc.)
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) {
-        callback(null, true);
+        return callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        return callback(new Error('Not allowed by CORS'));
       }
     },
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'], // Explicitly define allowed headers
   })
 );
 
-// Middleware setup
+// ✅ Middleware setup (parsers, logger, etc.)
 require("./config")(app);
 
-// Routes
-const indexRoutes = require("./routes/index.routes");
-app.use("/", indexRoutes);
+// ✅ Routes
+app.use("/", require("./routes/index.routes"));
+app.use("/", require("./routes/auth.routes"));
+app.use("/", require("./routes/item.routes"));
+app.use("/", require("./routes/collection.routes"));
+app.use("/", require("./routes/upload.routes"));
+app.use("/", require("./routes/categories.routes"));
+app.use("/", require("./routes/bookmarks.routes"));
+app.use("/", require("./routes/search.routes"));
+app.use("/", require("./routes/user.routes"));
 
-const authRoutes = require("./routes/auth.routes");
-app.use("/", authRoutes);
-
-const itemRoutes = require("./routes/item.routes");
-app.use("/", itemRoutes);
-
-const collectionRoutes = require("./routes/collection.routes");
-app.use("/", collectionRoutes);
-
-const uploadRoutes = require("./routes/upload.routes");
-app.use("/", uploadRoutes);
-
-const categoryRoutes = require("./routes/categories.routes");
-app.use("/", categoryRoutes);
-
-const bookmarksRoutes = require("./routes/bookmarks.routes");
-app.use("/", bookmarksRoutes);
-
-const searchRoutes = require("./routes/search.routes");
-app.use("/", searchRoutes);
-
-const userRoutes = require("./routes/user.routes");
-app.use("/", userRoutes);
-
-// Optional: CORS test route
+// ✅ Optional: Test CORS route (good for debugging)
 app.get('/test-cors', (req, res) => {
   res.json({ message: 'CORS is working!' });
 });
 
-// Error handling
+// ✅ Error handling (must be after all routes)
 require("./error-handling")(app);
 
+// ✅ Export app for use in server.js or main entry
 module.exports = app;
