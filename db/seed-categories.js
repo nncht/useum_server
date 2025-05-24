@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Category = require("../models/Category.model");
 
-// array of category names
 const categories = [
   { category: "Gaming" },
   { category: "Software Engineering" },
@@ -27,25 +26,40 @@ const categories = [
   { category: "Outdoor Activities" },
   { category: "Water Sports" },
   { category: "Other" },
-  {category: "Programming"},
-  {category: "Cinema & Movies"},
-  {category: "Literature"},
-  {category: "Music"},
-  {category: "Books & Comics"},
-  {category: "Anime & Manga"},
-  {category: "Activism & Social Movements"},
-  {category: "Politics"} ]
+  { category: "Programming" },
+  { category: "Cinema & Movies" },
+  { category: "Literature" },
+  { category: "Music" },
+  { category: "Books & Comics" },
+  { category: "Anime & Manga" },
+  { category: "Activism & Social Movements" },
+  { category: "Politics" },
+];
 
 const MONGO_URI =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/association_server";
+  process.env.MONGODB_URI || "mongodb+srv://admin:8XDWEkL8Qn9jp0BT@useum.ifhntqc.mongodb.net/useum?retryWrites=true&w=majority";
 
-mongoose
-  .connect(MONGO_URI)
-  .then(() => {
-    // loop through categories array and create category documents in the database
-    Category.create(categories)
-      .then(() => console.log("Database seeded with categories"))
-      .catch((error) => console.error(error))
-      .finally(() => mongoose.disconnect());
-  })
-  .catch((error) => console.error(error));
+async function seedCategories() {
+  try {
+    console.log("Connecting to MongoDB...");
+    await mongoose.connect(MONGO_URI);
+    console.log("Connected!");
+
+    // Clear existing categories (optional)
+    await Category.deleteMany();
+    console.log("Old categories cleared.");
+
+    // Insert new categories
+    await Category.insertMany(categories);
+    console.log("Database seeded with categories!");
+
+  } catch (error) {
+    console.error("Error seeding categories:", error);
+  } finally {
+    await mongoose.disconnect();
+    console.log("Disconnected from MongoDB.");
+    process.exit();
+  }
+}
+
+seedCategories();
